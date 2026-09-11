@@ -63,12 +63,27 @@
   .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
   .unit-card{background:var(--grad-soft);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:18px}
-  .unit-card .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--teal-deep);margin-bottom:6px}
+  .unit-card .eyebrow-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+  .unit-card .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--teal-deep)}
   .unit-card h2{font-family:'Fraunces',serif;font-size:26px;font-weight:800;color:var(--navy)}
   .unit-card .due{margin-top:14px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 14px;border-top:1px solid var(--border);padding-top:14px}
   .unit-card .due-label{font-size:13px;color:var(--muted);flex:1 1 160px}
   .unit-card .due-amt{font-family:'Fraunces',serif;font-size:27px;font-weight:800}
   .due-amt.zero{color:var(--green)} .due-amt.owe{color:var(--red)}
+  .updated-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:#1f5c2a;background:var(--green-tint);border:1px solid rgba(61,158,74,.3);border-radius:20px;padding:4px 10px 4px 8px;white-space:nowrap}
+  .updated-badge .dot{width:6px;height:6px;border-radius:99px;background:var(--green);flex:0 0 auto}
+
+  .pay-box{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+  .pay-field{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:10px 12px}
+  .pay-field-main{flex:1 1 auto;min-width:0}
+  .pay-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+  .pay-val{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--navy);letter-spacing:.3px;word-break:break-all;margin-top:2px}
+  .pay-copy{flex:0 0 auto;min-height:38px;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:0 14px;font-weight:800;font-size:12px;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap}
+  .pay-copy.alt{background:var(--surface);color:var(--navy);border:1px solid var(--border)}
+  .pay-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);padding:2px 2px 0}
+  .pay-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .pay-copied{font-size:12px;color:var(--green);font-weight:700;margin-top:2px;display:none}
+  .pay-copied.show{display:block}
 
   .section{margin-bottom:22px}
   .section-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--teal-deep);font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:8px}
@@ -86,11 +101,29 @@
   .chart-box canvas{max-width:100%}
   .chart-note{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
 
+  .debtor-bars{display:flex;flex-direction:column;gap:10px}
+  .debtor-bar-row{display:flex;align-items:center;gap:10px}
+  .debtor-bar-id{width:38px;flex:0 0 auto;font-size:12px;font-weight:800;color:var(--navy)}
+  .debtor-bar-track{flex:1 1 auto;height:20px;background:var(--navy-tint);border-radius:5px;overflow:hidden;min-width:0}
+  .debtor-bar-fill{height:100%;border-radius:5px}
+  .debtor-bar-sum{width:70px;flex:0 0 auto;text-align:right;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
+  .debtor-bar-footnote{font-size:11.5px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;margin-top:2px}
+
   .journal-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
   .journal-row:last-child{border-bottom:none}
   .j-left{color:var(--text)} .j-date{color:var(--muted);font-size:11px;display:block;margin-top:1px}
   .j-amt.inc{color:var(--green);font-weight:800} .j-amt.exp{color:var(--red);font-weight:800}
   .dual{font-size:.68em;color:var(--muted);font-weight:600;margin-left:4px}
+
+  .jgroup{border-bottom:1px solid var(--border)}
+  .jgroup:last-child{border-bottom:none}
+  .jgroup summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;font-size:13px}
+  .jgroup summary::-webkit-details-marker{display:none}
+  .jgroup summary .jarrow{color:var(--muted);font-size:11px;transition:transform .15s;flex-shrink:0}
+  .jgroup[open] summary .jarrow{transform:rotate(180deg)}
+  .jgroup-sub{padding:0 0 10px}
+  .jgroup-item{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:12px;border-top:1px dashed var(--border)}
+  .jtag{display:inline-block;font-size:10px;font-weight:700;color:var(--teal-deep);background:var(--teal-tint);border-radius:10px;padding:2px 8px;margin-right:6px;white-space:nowrap}
 
   .logout{text-align:center;margin-top:24px}
   .logout button{min-height:44px;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:22px;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700}
@@ -115,24 +148,25 @@
   .admin-close{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;font-family:'Nunito',sans-serif;min-height:36px}
   .print-date{font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px}
 
-  .stat-strip{display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:8px;margin-bottom:22px}
-  .stat-chip{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 6px;text-align:center;min-width:0}
-  .stat-chip .stat-num{font-family:'Fraunces',serif;font-weight:800;font-size:19px;color:var(--navy)}
+  .stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .stat-chip{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 14px;text-align:left;min-width:0}
+  .stat-chip.full{grid-column:1 / -1;display:flex;align-items:center;gap:14px;text-align:left}
+  .stat-chip .stat-num{font-family:'Fraunces',serif;font-weight:800;font-size:19px;color:var(--navy);white-space:nowrap}
   .stat-chip.warn .stat-num{color:var(--red)}
-  .stat-chip .stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;font-weight:700;line-height:1.3}
-  .info-btn{position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--navy-tint);color:var(--teal-deep);border:none;font-size:11px;font-weight:800;font-style:italic;font-family:Georgia,serif;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
-  .stat-info{display:block;font-size:11px;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);text-align:left;line-height:1.4}
-  .stat-info.hidden{display:none}
+  .stat-chip .stat-label{font-size:12px;font-weight:700;color:var(--text);margin-top:4px;line-height:1.3}
+  .stat-info{display:block;font-size:11px;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;margin-top:5px;line-height:1.4}
+  .stat-chip.full .stat-info{margin-top:0}
 
-  .runway-box{border-radius:11px;padding:14px 16px;margin-bottom:16px;font-size:13px;font-weight:700;display:flex;gap:10px;align-items:flex-start}
+  .runway-box{border-radius:11px;padding:12px 15px;margin-bottom:16px;font-size:12.5px;font-weight:700;display:flex;gap:9px;align-items:center}
   .runway-box.danger{background:var(--red-tint);border:1px solid rgba(228,0,58,.3);color:#8f0028}
   .runway-box.ok{background:var(--green-tint);border:1px solid rgba(61,158,74,.3);color:#1f5c2a}
+  .runway-box .dot{width:8px;height:8px;border-radius:99px;background:currentColor;flex:0 0 auto}
 
   .contact-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
   .contact-row:last-child{border-bottom:none}
   .contact-role{font-weight:700;color:var(--text)}
   .contact-note{font-size:11px;color:var(--muted);display:block;margin-top:1px}
-  .contact-call{background:var(--green-tint);color:#1f5c2a;border:1px solid rgba(61,158,74,.3);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:800;text-decoration:none;min-height:36px;display:inline-flex;align-items:center}
+  .contact-call{background:var(--green-tint);color:#1f5c2a;border:1px solid rgba(61,158,74,.3);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:800;text-decoration:none;min-height:36px;display:inline-flex;align-items:center;font-variant-numeric:tabular-nums}
 
   .signal-row{padding:12px 0;border-bottom:1px solid var(--border)}
   .signal-row:last-child{border-bottom:none}
@@ -155,9 +189,24 @@
 
   .export-btn{width:100%;min-height:46px;margin-top:10px;background:var(--navy-tint);color:var(--navy);border:1px solid var(--border);border-radius:9px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif}
 
+  .proto-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .proto-chip{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:6px 12px;min-height:30px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif}
+  .proto-chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .proto-type-chip{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+  .proto-type-chip.regular{background:var(--green-tint);color:#1f5c2a}
+  .proto-type-chip.extra{background:var(--amber-tint);color:#8a5205}
+  .proto-row{display:none}
+  .proto-row.show{display:block}
+
+  .portal-nav{position:sticky;top:0;z-index:20;margin:0 -18px 18px;padding:12px 18px 10px;background:linear-gradient(var(--bg) 78%, rgba(238,242,248,0));}
+  .portal-nav-inner{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .portal-nav-inner::-webkit-scrollbar{display:none}
+  .nav-pill{flex:0 0 auto;min-height:36px;display:inline-flex;align-items:center;padding:0 13px;border-radius:999px;background:var(--surface);color:var(--navy);font-size:12.5px;font-weight:700;text-decoration:none;border:1px solid var(--border);white-space:nowrap}
+  .nav-pill.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+
   @media print{
     body::before, body::after{display:none}
-    .demo-banner, .brand, .install-banner, .admin-toggle, .admin-close, .print-btn, .unit-card, .stat-strip, .runway-box, .export-btn, .section:not(#printSection), .logout, .foot{display:none !important}
+    .demo-banner, .brand, .install-banner, .admin-toggle, .admin-close, .print-btn, .unit-card, .stat-strip, .runway-box, .export-btn, .section:not(#printSection), .logout, .foot, .portal-nav{display:none !important}
     #printSection{display:block !important}
     .wrap{max-width:100%;padding:0}
     #adminView{border:none;box-shadow:none;padding:0}
@@ -196,6 +245,12 @@
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9hMZpDQ-PLtV0KfdftacqZR3AB3KusVmlIqdKA2q5qgxOg5qm9GFKVslpa-lPmQGzhA/exec";
 
 function fmt(n){ return (Number(n)||0).toLocaleString('bg-BG',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+// За суми ~0 показва тире вместо подвеждащо "-0,00 €" / "+0,00 €" (изглежда все едно нищо не е въведено, не че наистина е нула).
+function fmtOrDash(n, title){
+  var v = Number(n) || 0;
+  if (Math.abs(v) < 0.005) return '<span title="' + escapeHtml(title || 'Няма въведени данни') + '">—</span>';
+  return fmt(v);
+}
 if (window.ChartDataLabels) { Chart.register(ChartDataLabels); }
 function monthLabel(key){
   var parts = key.split('-'); var names=['Яну','Фев','Мар','Апр','Май','Юни','Юли','Авг','Сеп','Окт','Ное','Дек'];
@@ -216,13 +271,59 @@ function yearlyFromTrend(trend){
   return Object.keys(years).sort().map(function(y){ return { year: y, income: years[y].income, expense: years[y].expense }; });
 }
 
-// Описанията са видими по подразбиране за всяка карта; (i) бутонът скрива/показва
-// само своята карта, независимо от останалите (не е accordion).
-function toggleInfo(evt, btn){
-  evt.stopPropagation();
-  var info = btn.parentElement.querySelector('.stat-info');
-  if (!info) return;
-  info.classList.toggle('hidden');
+function copyText_(text, msgId){
+  var msg = document.getElementById(msgId);
+  function shown(){ if (msg) { msg.classList.add('show'); setTimeout(function(){ msg.classList.remove('show'); }, 2500); } }
+  if (!text) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(shown).catch(function(){ fallbackCopy_(text, shown); });
+  } else {
+    fallbackCopy_(text, shown);
+  }
+}
+function copyIban(){
+  var el = document.getElementById('payIban');
+  copyText_(el ? el.textContent.trim() : '', 'payCopied');
+}
+function copyRef(){
+  var el = document.getElementById('payRef');
+  copyText_(el ? el.textContent.trim() : '', 'payRefCopied');
+}
+function fallbackCopy_(text, cb){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+  if (cb) cb();
+}
+
+// Групира "Последни разходи" по общ таг в началото на бележката, напр. "[Отчет апр-юни 2023] ...".
+// Записи без такъв таг си остават единични редове, както преди.
+function groupJournal_(entries){
+  var groups = []; var byKey = {};
+  (entries || []).forEach(function(j){
+    var m = String(j.note || '').match(/^\[(.+?)\]\s*(.*)$/);
+    var key = m ? m[1] : null;
+    var detail = m ? m[2] : j.note;
+    if (key && byKey[key]) {
+      byKey[key].items.push({ category: j.category, amount: j.amount, detail: detail });
+      byKey[key].total += j.amount;
+    } else {
+      var g = { label: key, items: [{ category: j.category, amount: j.amount, detail: detail }], total: j.amount, date: j.date };
+      groups.push(g);
+      if (key) byKey[key] = g;
+    }
+  });
+  return groups;
+}
+
+function filterProtocols(btn, year){
+  document.querySelectorAll('.proto-chip').forEach(function(c){ c.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.proto-row').forEach(function(row){
+    row.classList.toggle('show', year === 'all' || row.getAttribute('data-year') === String(year));
+  });
 }
 
 function toggleAdmin(){
@@ -350,7 +451,7 @@ function toCsvValue_(v){
 }
 function downloadCsv_(filename, rows){
   var csv = rows.map(function(r){ return r.map(toCsvValue_).join(','); }).join('\r\n');
-  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url; a.download = filename;
@@ -396,6 +497,13 @@ function resetSessionTimer(){
 
 function escapeHtml(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+var PORTAL_NAV_HTML = '<div class="portal-nav"><div class="portal-nav-inner">'
+  + '<a href="#apartament" class="nav-pill">Моят апартамент</a>'
+  + '<a href="#finansi" class="nav-pill">Финанси</a>'
+  + '<a href="#arhiv" class="nav-pill">Архив</a>'
+  + '<a href="#pomosht" class="nav-pill">Помощ</a>'
+  + '</div></div>';
+
 function render(d){
   window.__lastData = d;
   var due = Number(d.due) || 0;
@@ -410,48 +518,71 @@ function render(d){
   var yearly = yearlyFromTrend(d.budgetTrend);
   var yearlyHtml = yearly.map(function(y){
     return '<div class="journal-row"><div class="j-left">' + y.year + '</div>'
-      + '<div style="display:flex;gap:14px"><span class="j-amt inc">+' + fmt(y.income) + '</span><span class="j-amt exp">-' + fmt(y.expense) + '</span></div></div>';
+      + '<div style="display:flex;gap:14px">'
+      + '<span class="j-amt inc">' + (Math.abs(y.income) < 0.005 ? fmtOrDash(0,'Няма въведени приходи') : '+' + fmt(y.income)) + '</span>'
+      + '<span class="j-amt exp">' + (Math.abs(y.expense) < 0.005 ? fmtOrDash(0,'Няма въведени разходи') : '-' + fmt(y.expense)) + '</span>'
+      + '</div></div>';
   }).join('') || '<div style="color:var(--muted);font-size:13px">Няма данни за нито една година.</div>';
 
-  var journalHtml = (d.recentJournal || []).map(function(j){
-    return '<div class="journal-row"><div class="j-left">' + escapeHtml(j.category) + '<span class="j-date">' + escapeHtml(formatDateShort(j.date)) + (j.note ? ' — ' + escapeHtml(j.note) : '') + '</span></div>'
-      + '<div class="j-amt exp">-' + fmt(j.amount) + '</div></div>';
+  var journalGroups = groupJournal_(d.recentJournal);
+  var journalHtml = journalGroups.map(function(g){
+    if (g.label && g.items.length > 1) {
+      var subHtml = g.items.map(function(it){
+        return '<div class="jgroup-item"><div><span class="jtag">' + escapeHtml(it.category) + '</span>' + escapeHtml(it.detail || '') + '</div>'
+          + '<div class="j-amt exp">-' + fmt(it.amount) + '</div></div>';
+      }).join('');
+      return '<details class="jgroup"><summary><div class="j-left">' + escapeHtml(g.label) + '<span class="j-date">' + g.items.length + ' записа</span></div>'
+        + '<div style="display:flex;align-items:center;gap:8px"><span class="j-amt exp">-' + fmt(g.total) + '</span><span class="jarrow">▾</span></div></summary>'
+        + '<div class="jgroup-sub">' + subHtml + '</div></details>';
+    }
+    var only = g.items[0];
+    return '<div class="journal-row"><div class="j-left">' + escapeHtml(only.category) + '<span class="j-date">' + escapeHtml(formatDateShort(g.date)) + (only.detail ? ' — ' + escapeHtml(only.detail) : '') + '</span></div>'
+      + '<div class="j-amt exp">-' + fmt(only.amount) + '</div></div>';
   }).join('') || '<div style="color:var(--muted);font-size:13px">Няма скорошни записи.</div>';
 
+  var protoYears = Array.from(new Set((d.protocols || []).map(function(p){ var dt = new Date(p.date); return isNaN(dt.getTime()) ? null : dt.getFullYear(); }).filter(Boolean))).sort().reverse();
+  var protoFiltersHtml = protoYears.length > 1
+    ? '<div class="proto-filters"><button class="proto-chip active" onclick="filterProtocols(this,\'all\')">Всички</button>'
+      + protoYears.map(function(y){ return '<button class="proto-chip" onclick="filterProtocols(this,\'' + y + '\')">' + y + '</button>'; }).join('')
+      + '</div>'
+    : '';
+  var protoTypeClassMap = { 'Редовно': 'regular', 'Извънредно': 'extra' };
   var protocolsHtml = (d.protocols || []).map(function(p){
     var linkHtml = (p.link && /^https?:\/\//.test(p.link)) ? ' · <a href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener" style="color:var(--teal-deep);font-weight:700">Свали протокол ↗</a>' : '';
-    return '<div class="journal-row" style="align-items:flex-start"><div class="j-left"><strong>' + escapeHtml(p.topics) + '</strong>'
-      + '<span class="j-date">' + escapeHtml(formatDateShort(p.date)) + ' — ' + escapeHtml(p.type) + linkHtml + '</span>'
+    var dt = new Date(p.date); var yr = isNaN(dt.getTime()) ? '' : dt.getFullYear();
+    var typeCls = protoTypeClassMap[p.type] || 'regular';
+    return '<div class="journal-row proto-row show" data-year="' + yr + '" style="align-items:flex-start"><div class="j-left"><strong>' + escapeHtml(p.topics) + '</strong>'
+      + '<span class="j-date">' + escapeHtml(formatDateShort(p.date)) + '<span class="proto-type-chip ' + typeCls + '">' + escapeHtml(p.type) + '</span>' + linkHtml + '</span>'
       + '<div style="font-size:12px;color:var(--muted);margin-top:4px">' + escapeHtml(p.decisions) + '</div></div></div>';
   }).join('') || '<div style="color:var(--muted);font-size:13px">Няма качени протоколи все още.</div>';
+  protocolsHtml = protoFiltersHtml + protocolsHtml;
 
   var s = d.stats || {};
   var statStripHtml = '<div class="stat-strip">'
-    + '<div class="stat-chip' + (s.debtorsCount > 0 ? ' warn' : '') + '">'
-      + '<button class="info-btn" onclick="toggleInfo(event,this)" aria-label="Обяснение">i</button>'
-      + '<div class="stat-num">' + (s.debtorsCount||0) + '/' + (s.totalUnits||0) + '</div><div class="stat-label">апартамента дължат сега</div>'
-      + '<div class="stat-info">Брой апартаменти с неплатени такси към днешна дата, от общо ' + (s.totalUnits||0) + ' в блока. Само по номер — без имена.</div>'
+    + '<div class="stat-chip' + (s.paidThisMonth === 0 ? ' warn' : '') + '">'
+      + '<div class="stat-num">' + (s.paidThisMonth||0) + ' <span style="font-size:13px;color:var(--muted);font-weight:500">от ' + (s.totalUnits||0) + '</span></div>'
+      + '<div class="stat-label">платени такси този месец</div>'
+      + '<div class="stat-info">Без имена — само по номер на апартамент.</div>'
       + '</div>'
     + '<div class="stat-chip' + (s.overdueMonths > 0 ? ' warn' : '') + '">'
-      + '<button class="info-btn" onclick="toggleInfo(event,this)" aria-label="Обяснение">i</button>'
-      + '<div class="stat-num">' + (s.overdueMonths||0) + '/' + (s.monthsSinceStart||0) + '</div><div class="stat-label">твои просрочени месеца</div>'
-      + '<div class="stat-info">Приблизителен брой месеци неплатена такса, изчислен от дължимата ти сума разделена на месечната такса. Второто число е откога си собственик.</div>'
+      + '<div class="stat-num">' + (s.overdueMonths||0) + ' <span style="font-size:13px;color:var(--muted);font-weight:500">от ' + (s.monthsSinceStart||0) + '</span></div>'
+      + '<div class="stat-label">твои неплатени месеца</div>'
+      + '<div class="stat-info">Второто число е откога си собственик.</div>'
       + '</div>'
-    + '<div class="stat-chip' + (due > 0 ? ' warn' : '') + '">'
-      + '<button class="info-btn" onclick="toggleInfo(event,this)" aria-label="Обяснение">i</button>'
-      + '<div class="stat-num">' + fmt(s.yearEndProjection) + '</div><div class="stat-label">проекция до края на годината</div>'
-      + '<div class="stat-info">Колко ще дължиш до края на тази година, ако не платиш нищо повече оттук нататък — текущ дълг плюс оставащите месечни такси.</div>'
+    + '<div class="stat-chip full' + (due > 0 ? ' warn' : '') + '">'
+      + '<div class="stat-num">' + fmt(s.yearEndProjection) + '</div>'
+      + '<div class="stat-info"><strong style="color:var(--text)">Проекция до края на годината</strong> — ако не платиш нищо оттук насетне: текущ дълг + оставащите месечни такси.</div>'
       + '</div>'
     + '</div>';
 
   var runwayHtml = '';
   if (d.isAdmin && d.cashRunway) {
     if (d.cashRunway.stable) {
-      runwayHtml = '<div class="runway-box ok">✅ <span>Финансите на входа са стабилни при текущия темп на разходи (последни 3 месеца).</span></div>';
+      runwayHtml = '<div class="runway-box ok"><span class="dot"></span><span>Финансите на входа са стабилни при текущия темп на разходи (последни 3 месеца).</span></div>';
     } else {
       var rd = new Date(d.cashRunway.date);
       var rdText = rd.toLocaleDateString('bg-BG', {month:'long', year:'numeric'});
-      runwayHtml = '<div class="runway-box danger">⚠️ <span>При текущия темп на разходи и просрочия, касата на входа ще се изпразни до <strong>' + rdText + '</strong> (~' + d.cashRunway.months + ' месеца). Само за твоя/домоуправителска информация — не се показва на собствениците.</span></div>';
+      runwayHtml = '<div class="runway-box danger"><span class="dot"></span><span>При текущия темп на разходи и просрочия, касата на входа ще се изпразни до <strong>' + rdText + '</strong> (~' + d.cashRunway.months + ' месеца). Само за твоя/домоуправителска информация — не се показва на собствениците.</span></div>';
     }
   }
 
@@ -480,12 +611,32 @@ function render(d){
     + '<div class="signal-msg" id="signalMsg"></div>'
     + '</div>';
 
-  document.getElementById('result').innerHTML =
-    '<div class="unit-card">'
-      + '<div class="eyebrow">Твоят апартамент</div>'
+  var lastUpdatedText = d.lastUpdated ? formatDateShort(d.lastUpdated) : null;
+  var updatedBadgeHtml = lastUpdatedText ? '<div class="updated-badge"><span class="dot"></span>Обновено ' + escapeHtml(lastUpdatedText) + '</div>' : '<span></span>';
+
+  var payBoxHtml = '';
+  if (due > 0 && d.bankIban && d.bankIban.toUpperCase().indexOf('ПОПЪЛНИ') === -1) {
+    var payRef = d.unit + ' — такса поддръжка';
+    payBoxHtml = '<div class="pay-box">'
+      + '<div class="pay-field"><div class="pay-field-main"><div class="pay-label">IBAN за такси</div><div class="pay-val" id="payIban">' + escapeHtml(d.bankIban) + '</div></div>'
+      + '<button class="pay-copy" onclick="copyIban()">📋 Копирай</button></div>'
+      + '<div class="pay-field"><div class="pay-field-main"><div class="pay-label">Основание за превода</div><div class="pay-val" id="payRef">' + escapeHtml(payRef) + '</div></div>'
+      + '<button class="pay-copy alt" onclick="copyRef()">📋 Копирай</button></div>'
+      + '<div class="pay-meta"><span>Титуляр: ' + escapeHtml(d.bankHolder || 'Вход А, Grand Azurro') + '</span></div>'
+      + '<div class="pay-copied" id="payCopied">✅ IBAN копиран</div>'
+      + '<div class="pay-copied" id="payRefCopied">✅ Основанието е копирано</div>'
+      + '<div class="pay-note">Задължително посочвай апартамента в основанието, за да се разпознае плащането.</div>'
+      + '</div>';
+  }
+
+  document.getElementById('result').innerHTML = PORTAL_NAV_HTML
+    + '<div id="apartament">'
+    + '<div class="unit-card">'
+      + '<div class="eyebrow-row"><div class="eyebrow">Твоят апартамент</div>' + updatedBadgeHtml + '</div>'
       + '<h2>' + escapeHtml(d.unit) + '</h2>'
       + '<div class="due"><span class="due-label">Дължимо към момента (' + fmt(d.feePerMonth) + '/мес.)</span>'
       + '<span class="due-amt ' + (due > 0 ? 'owe' : 'zero') + '">' + (due > 0 ? fmt(due) : 'Всичко платено') + '</span></div>'
+      + payBoxHtml
     + '</div>'
     + statStripHtml
     + runwayHtml
@@ -496,19 +647,24 @@ function render(d){
       + '<div style="display:flex;gap:8px"><button class="print-btn" onclick="window.print()">🖨️ Принтирай</button><button class="admin-close" onclick="toggleAdmin()">Затвори</button></div></div>'
       + '<div class="chart-box" id="allDebtorsBox"><canvas id="allDebtorsChart"></canvas></div>'
       + '</div></div>'
+    + '</div>'
+    + '<div id="finansi">'
     + '<div class="section"><div class="section-label">Финанси</div><div class="section-title">Бюджет на входа</div>' + budgetHtml + '</div>'
     + '<div class="section"><div class="section-label">Прозрачност</div><div class="section-title">Топ длъжници <em style="color:var(--teal-deep);font-style:italic">(без имена)</em></div>'
-      + '<div class="chart-card"><div class="chart-box" id="debtorsBox"><canvas id="debtorsChart"></canvas></div>'
-      + (d.debtorsChart && d.debtorsChart.length ? '' : '<div class="chart-note">Няма апартаменти със задължения. 🎉</div>')
-      + '</div></div>'
+      + '<div class="chart-card" id="debtorsCard"></div></div>'
     + '<div class="section"><div class="section-label">История</div><div class="section-title">Приходи срещу разходи</div>'
       + '<div class="chart-card"><div class="chart-box"><canvas id="trendChart"></canvas></div></div>'
     + '<div class="section"><div class="section-label">Отчетност</div><div class="section-title">Годишен отчет</div>' + yearlyHtml + '</div>'
     + '<div class="section"><div class="section-label">Дневник</div><div class="section-title">Последни разходи</div>' + journalHtml + '</div>'
+    + '</div>'
+    + '<div id="arhiv">'
     + '<div class="section"><div class="section-label">Архив</div><div class="section-title">Протоколи от общи събрания</div>' + protocolsHtml + '</div>'
+    + '</div>'
+    + '<div id="pomosht">'
     + '<div class="section"><div class="section-label">Помощ</div><div class="section-title">Важни телефони</div>' + contactsHtml + '</div>'
     + '<div class="section"><div class="section-label">Поддръжка</div><div class="section-title">Сигнали за повреди</div>'
       + '<div style="margin-bottom:14px">' + signalsListHtml + '</div>' + signalFormHtml + '</div>'
+    + '</div>'
     + (d.isAdmin ? '<button class="export-btn" onclick="exportCsv()">📥 Изтегли всички данни (CSV)</button>' : '')
     + '<div class="logout"><button onclick="location.reload()">Изход</button></div>';
 
@@ -518,44 +674,38 @@ function render(d){
 function drawCharts(d){
   var red = '#e4003a', green = '#3d9e4a', amber='#d97706', muted = '#7a85a8', gridColor='rgba(25,33,102,0.08)';
 
+  var debtorsCard = document.getElementById('debtorsCard');
   if (d.debtorsChart && d.debtorsChart.length) {
-    var boxH = Math.max(140, 34 * d.debtorsChart.length);
-    document.getElementById('debtorsBox').style.height = boxH + 'px';
-    var ctx1 = document.getElementById('debtorsChart').getContext('2d');
-    new Chart(ctx1, {
-      type: 'bar',
-      data: {
-        labels: d.debtorsChart.map(function(x){ return x.unit.replace('Апартамент ',''); }),
-        datasets: [{ label: 'Дължимо', data: d.debtorsChart.map(function(x){ return x.due; }), backgroundColor: amber, borderRadius: 4 }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          datalabels: { display: false },
-          tooltip: { callbacks: { label: function(ctx){
-            return ctx.parsed.x.toFixed(2) + ' €';
-          } } }
-        },
-        scales: {
-          x: { ticks: { color: muted, font: { size: 11 }, callback: function(v){ return v + ' €'; } }, grid: { color: gridColor } },
-          y: { ticks: { color: muted, font: { size: 11 } }, grid: { display: false } }
-        }
-      }
-    });
+    var maxVal1 = Math.max.apply(null, d.debtorsChart.map(function(x){ return x.due; }));
+    var barsHtml = '<div class="debtor-bars">' + d.debtorsChart.map(function(x, i){
+      var pct = maxVal1 > 0 ? Math.max(4, Math.round(x.due / maxVal1 * 100)) : 0;
+      var color = i < 2 ? red : amber;
+      return '<div class="debtor-bar-row">'
+        + '<div class="debtor-bar-id">' + escapeHtml(x.unit.replace('Апартамент ','')) + '</div>'
+        + '<div class="debtor-bar-track"><div class="debtor-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>'
+        + '<div class="debtor-bar-sum">' + x.due.toFixed(2) + ' €</div>'
+        + '</div>';
+    }).join('') + '</div>';
+    debtorsCard.innerHTML = barsHtml;
+  } else {
+    debtorsCard.innerHTML = '<div class="chart-note">Няма апартаменти със задължения. 🎉</div>';
   }
 
   var ctx2 = document.getElementById('trendChart').getContext('2d');
-  var labels = (d.budgetTrend || []).map(function(x){ return monthLabel(x.month); });
+  var rawMonths = (d.budgetTrend || []).map(function(x){ return x.month; });
+  var labels = rawMonths.map(monthLabel);
+  var incomeData = (d.budgetTrend||[]).map(function(x){ return x.income; });
+  var expenseData = (d.budgetTrend||[]).map(function(x){ return -x.expense; });
+  var runningCash = 0;
+  var cashData = (d.budgetTrend||[]).map(function(x){ runningCash += (x.income - x.expense); return Math.round(runningCash * 100) / 100; });
   new Chart(ctx2, {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: labels,
       datasets: [
-        { label: 'Приходи', data: (d.budgetTrend||[]).map(function(x){return x.income;}), borderColor: green, backgroundColor: green, tension: .3, pointRadius: 3 },
-        { label: 'Разходи', data: (d.budgetTrend||[]).map(function(x){return x.expense;}), borderColor: red, backgroundColor: red, tension: .3, pointRadius: 3 }
+        { type: 'bar', label: 'Приходи', data: incomeData, backgroundColor: green, borderRadius: 3, order: 2 },
+        { type: 'bar', label: 'Разходи', data: expenseData, backgroundColor: red, borderRadius: 3, order: 2 },
+        { type: 'line', label: 'Каса (кумулативно)', data: cashData, borderColor: '#192166', backgroundColor: '#192166', borderWidth: 2, pointRadius: 0, tension: .25, order: 1 }
       ]
     },
     options: {
@@ -565,12 +715,22 @@ function drawCharts(d){
         legend: { labels: { color: muted, font: { family: 'Nunito', size: 11 } } },
         datalabels: { display: false },
         tooltip: { callbacks: { label: function(ctx){
-          return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + ' €';
+          var v = ctx.dataset.type === 'bar' ? Math.abs(ctx.parsed.y) : ctx.parsed.y;
+          return ctx.dataset.label + ': ' + v.toFixed(2) + ' €';
         } } }
       },
       scales: {
-        x: { ticks: { color: muted, font: { size: 10 }, maxRotation: 60, minRotation: 60 }, grid: { display: false } },
-        y: { ticks: { color: muted, font: { size: 11 }, callback: function(v){ return v + ' €'; } }, grid: { color: gridColor } }
+        x: {
+          stacked: true,
+          ticks: {
+            color: muted, font: { size: 10 }, maxRotation: 0, minRotation: 0, autoSkip: false,
+            callback: function(val, idx){
+              return (idx % 3 === 0) ? this.getLabelForValue(val) : '';
+            }
+          },
+          grid: { display: false }
+        },
+        y: { stacked: true, ticks: { color: muted, font: { size: 11 }, callback: function(v){ return v + ' €'; } }, grid: { color: gridColor } }
       }
     }
   });
