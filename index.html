@@ -94,7 +94,7 @@
 
   .logout{text-align:center;margin-top:24px}
   .logout button{min-height:44px;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:22px;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700}
-  .foot{margin-top:30px;text-align:center;font-size:11px;color:var(--muted)}
+  .foot{margin-top:30px;text-align:left;font-size:12px;line-height:1.5;color:var(--muted)}
 
   @media (max-width:380px){
     .wrap{padding:20px 14px 50px}
@@ -121,8 +121,8 @@
   .stat-chip.warn .stat-num{color:var(--red)}
   .stat-chip .stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;font-weight:700;line-height:1.3}
   .info-btn{position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--navy-tint);color:var(--teal-deep);border:none;font-size:11px;font-weight:800;font-style:italic;font-family:Georgia,serif;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
-  .stat-info{display:none;font-size:11px;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);text-align:left;line-height:1.4}
-  .stat-info.open{display:block}
+  .stat-info{display:block;font-size:11px;color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);text-align:left;line-height:1.4}
+  .stat-info.hidden{display:none}
 
   .runway-box{border-radius:11px;padding:14px 16px;margin-bottom:16px;font-size:13px;font-weight:700;display:flex;gap:10px;align-items:flex-start}
   .runway-box.danger{background:var(--red-tint);border:1px solid rgba(228,0,58,.3);color:#8f0028}
@@ -189,7 +189,7 @@
   </div>
 
   <div id="result" class="hidden"></div>
-  <div class="foot">Данните се обновяват директно от касиера на входа.</div>
+  <div class="foot">Данните не са в реално време — обновяват се веднъж месечно. В началото на всеки месец нанасям плащанията от предходния, обичайно до 10-о число. Затова е нормално скорошен превод все още да не личи тук — ще е отразен при следващото обновяване.</div>
 </div>
 
 <script>
@@ -216,13 +216,13 @@ function yearlyFromTrend(trend){
   return Object.keys(years).sort().map(function(y){ return { year: y, income: years[y].income, expense: years[y].expense }; });
 }
 
+// Описанията са видими по подразбиране за всяка карта; (i) бутонът скрива/показва
+// само своята карта, независимо от останалите (не е accordion).
 function toggleInfo(evt, btn){
   evt.stopPropagation();
   var info = btn.parentElement.querySelector('.stat-info');
   if (!info) return;
-  var wasOpen = info.classList.contains('open');
-  document.querySelectorAll('.stat-info.open').forEach(function(el){ el.classList.remove('open'); });
-  if (!wasOpen) info.classList.add('open');
+  info.classList.toggle('hidden');
 }
 
 function toggleAdmin(){
@@ -278,17 +278,11 @@ function drawAdminChart(d){
 
 var IS_DEMO_MODE = SCRIPT_URL.indexOf('PASTE_YOUR') !== -1;
 
-// Кодът за достъп винаги се праща през POST body (не през URL query string), за да не се
-// логва/пази в browser history, server logs или referrer headers.
-function postAction_(params){
-  return fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams(params) });
-}
-
 async function loadStatus(code, silent){
   var errEl = document.getElementById('err');
   if (!silent) errEl.style.display = 'none';
   try {
-    var res = await postAction_({ action: 'getStatus', code: code });
+    var res = await fetch(SCRIPT_URL + '?action=getStatus&code=' + encodeURIComponent(code));
     var data = await res.json();
     if (!data.ok) {
       if (!silent) { errEl.textContent = data.error || 'Невалиден код.'; errEl.style.display = 'block'; }
@@ -326,7 +320,7 @@ async function submitSignal(){
     return;
   }
   try {
-    var res = await postAction_({ action: 'submitSignal', code: window.__activeCode, text: text, category: catEl.value });
+    var res = await fetch(SCRIPT_URL + '?action=submitSignal&code=' + encodeURIComponent(window.__activeCode) + '&text=' + encodeURIComponent(text) + '&category=' + encodeURIComponent(catEl.value));
     var data = await res.json();
     if (data.ok) {
       msgEl.className = 'signal-msg ok'; msgEl.textContent = 'Сигналът е изпратен успешно.'; msgEl.style.display = 'block';
@@ -342,7 +336,7 @@ async function submitSignal(){
 
 async function resolveSignal(id){
   try {
-    var res = await postAction_({ action: 'resolveSignal', code: window.__activeCode, id: id });
+    var res = await fetch(SCRIPT_URL + '?action=resolveSignal&code=' + encodeURIComponent(window.__activeCode) + '&id=' + encodeURIComponent(id));
     var data = await res.json();
     if (data.ok) { await loadStatus(window.__activeCode, true); }
     else { alert(data.error || 'Грешка.'); }
@@ -365,7 +359,7 @@ function downloadCsv_(filename, rows){
 }
 async function exportCsv(){
   try {
-    var res = await postAction_({ action: 'exportData', code: window.__activeCode });
+    var res = await fetch(SCRIPT_URL + '?action=exportData&code=' + encodeURIComponent(window.__activeCode));
     var data = await res.json();
     if (!data.ok) { alert(data.error || 'Грешка при износ.'); return; }
     var payRows = [['Дата','Апартамент','Сума','Валута','Начин','Бележка']].concat(
