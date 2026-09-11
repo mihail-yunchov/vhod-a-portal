@@ -4,8 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light only">
-<meta name="theme-color" content="#eef2f8">
-<title>Портал Вход А — Grand Azurro (ДЕМО)</title>
+<meta name="theme-color" content="#192166">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Вход А">
+<title>Вход А — Grand Azurro</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
@@ -37,6 +42,10 @@
   .brand h1{font-family:'Fraunces',serif;font-weight:800;font-size:24px;color:var(--navy);letter-spacing:-0.02em}
   .brand h1 em{font-style:italic;font-weight:600;color:var(--teal-deep)}
   .brand span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+
+  .install-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--grad-soft);border:1px solid var(--border);border-radius:11px;padding:10px 14px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--navy)}
+  .install-btn{background:var(--navy);color:#fff;border:none;border-radius:7px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;min-height:36px}
+  .install-dismiss{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 6px;line-height:1}
 
   .gate{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:26px 22px;box-shadow:0 2px 10px rgba(25,33,102,0.06)}
   .gate p{color:var(--muted);font-size:14px;margin-bottom:18px}
@@ -119,9 +128,36 @@
   .runway-box.danger{background:var(--red-tint);border:1px solid rgba(228,0,58,.3);color:#8f0028}
   .runway-box.ok{background:var(--green-tint);border:1px solid rgba(61,158,74,.3);color:#1f5c2a}
 
+  .contact-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .contact-row:last-child{border-bottom:none}
+  .contact-role{font-weight:700;color:var(--text)}
+  .contact-note{font-size:11px;color:var(--muted);display:block;margin-top:1px}
+  .contact-call{background:var(--green-tint);color:#1f5c2a;border:1px solid rgba(61,158,74,.3);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:800;text-decoration:none;min-height:36px;display:inline-flex;align-items:center}
+
+  .signal-row{padding:12px 0;border-bottom:1px solid var(--border)}
+  .signal-row:last-child{border-bottom:none}
+  .signal-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+  .signal-text{font-size:13px;color:var(--text);flex:1}
+  .signal-meta{font-size:11px;color:var(--muted);margin-top:3px}
+  .signal-status{font-size:10px;font-weight:800;padding:3px 9px;border-radius:12px;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
+  .signal-status.new{background:var(--amber-tint);color:#8a5205}
+  .signal-status.progress{background:var(--teal-tint);color:var(--teal-deep)}
+  .signal-status.done{background:var(--green-tint);color:#1f5c2a}
+  .signal-note{font-size:12px;color:var(--muted);margin-top:6px;font-style:italic}
+  .signal-resolve{margin-top:8px;background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif}
+
+  .signal-form textarea{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:var(--bg);resize:vertical;min-height:70px;outline:none}
+  .signal-form textarea:focus{border-color:var(--teal-deep);box-shadow:0 0 0 3px var(--teal-tint)}
+  .signal-form select{width:100%;margin-top:8px;border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
+  .signal-submit{width:100%;margin-top:10px;min-height:44px;background:var(--grad-primary);color:#fff;border:none;border-radius:9px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif}
+  .signal-msg{font-size:12px;margin-top:8px;display:none}
+  .signal-msg.ok{color:var(--green)} .signal-msg.error{color:var(--red)}
+
+  .export-btn{width:100%;min-height:46px;margin-top:10px;background:var(--navy-tint);color:var(--navy);border:1px solid var(--border);border-radius:9px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif}
+
   @media print{
     body::before, body::after{display:none}
-    .demo-banner, .brand, .admin-toggle, .admin-close, .print-btn, .unit-card, .stat-strip, .runway-box, .section:not(#printSection), .logout, .foot{display:none !important}
+    .demo-banner, .brand, .install-banner, .admin-toggle, .admin-close, .print-btn, .unit-card, .stat-strip, .runway-box, .export-btn, .section:not(#printSection), .logout, .foot{display:none !important}
     #printSection{display:block !important}
     .wrap{max-width:100%;padding:0}
     #adminView{border:none;box-shadow:none;padding:0}
@@ -130,11 +166,17 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="demo-banner">⚠ ДЕМО РЕЖИМ — данните на екрана са измислени, само за преглед на дизайна</div>
-
   <div class="brand">
     <h1>Вход А <em>Grand Azurro</em></h1>
     <span>Портал за собственици</span>
+  </div>
+
+  <div id="installBanner" class="install-banner hidden">
+    <span id="installText">📲 Инсталирай портала на началния екран за по-бърз достъп</span>
+    <div style="display:flex;gap:8px">
+      <button id="installBtn" class="install-btn hidden" onclick="doInstall()">Инсталирай</button>
+      <button class="install-dismiss" onclick="dismissInstall()">✕</button>
+    </div>
   </div>
 
   <div id="gate" class="gate">
@@ -143,10 +185,7 @@
       <input id="code" maxlength="6" placeholder="КОД" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" inputmode="text">
       <button id="enter" onclick="checkCode()">Влез</button>
     </div>
-    <div class="err" id="err">В демо режим кодът не се проверява — виж бутона отдолу.</div>
-    <div class="divider">или</div>
-    <button class="demo-btn" onclick="loadDemo()">Разгледай с демо данни (собственик) →</button>
-    <button class="demo-btn admin" onclick="loadAdminDemo()">Разгледай с демо данни (касиер) →</button>
+    <div class="err" id="err">Невалиден код. Провери го и опитай отново.</div>
   </div>
 
   <div id="result" class="hidden"></div>
@@ -154,75 +193,9 @@
 </div>
 
 <script>
-var DEMO_DATA = {
-  ok: true,
-  unit: "Апартамент А17",
-  role: "Собственик",
-  isAdmin: false,
-  feePerMonth: 20,
-  due: 40,
-  paidTotal: 620,
-  stats: { totalUnits: 54, debtorsCount: 12, overdueMonths: 2, monthsSinceStart: 47, yearEndProjection: 140 },
-  cashRunway: null,
-  buildingTotals: { income: 3120.00, expense: 2366.58, balance: 753.42 },
-  recentJournal: [
-    { date: "2026-02-15", category: "Ток общи части", amount: 42.10, note: "Сметка ЕВН" },
-    { date: "2026-02-10", category: "Почистване вход", amount: 80.00, note: "Месечно почистване" },
-    { date: "2026-02-01", category: "Асансьор — абонамент", amount: 60.00, note: "" },
-    { date: "2026-01-20", category: "Ток асансьор", amount: 15.30, note: "" }
-  ],
-  debtorsChart: [
-    { unit: "Апартамент А9", due: 180 },
-    { unit: "Апартамент А23", due: 140 },
-    { unit: "Апартамент А34", due: 100 },
-    { unit: "Апартамент А46", due: 80 },
-    { unit: "Апартамент А17", due: 40 },
-    { unit: "Апартамент А51", due: 20 }
-  ],
-  budgetTrend: [
-    { month: "2022-06", income: 980, expense: 850 },
-    { month: "2022-12", income: 1040, expense: 990 },
-    { month: "2023-06", income: 1120, expense: 1005 },
-    { month: "2023-12", income: 1180, expense: 1230 },
-    { month: "2024-06", income: 1260, expense: 1100 },
-    { month: "2024-12", income: 1310, expense: 1420 },
-    { month: "2025-06", income: 1390, expense: 1180 },
-    { month: "2025-12", income: 1450, expense: 1510 },
-    { month: "2026-02", income: 3120, expense: 2366.58 }
-  ],
-  protocols: [
-    { date: "2025-09-02", type: "Извънредно", topics: "Ремонт покрив", decisions: "Одобрен ремонт на покрив, бюджет 3500 лв. (1789.90 €)" },
-    { date: "2025-03-15", type: "Редовно", topics: "Бюджет 2025, такса поддръжка", decisions: "Такса остава 20 лв./мес., приет годишен бюджет" }
-  ]
-};
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9hMZpDQ-PLtV0KfdftacqZR3AB3KusVmlIqdKA2q5qgxOg5qm9GFKVslpa-lPmQGzhA/exec";
 
-var ADMIN_DEMO_DATA = Object.assign({}, DEMO_DATA, {
-  unit: "Апартамент А43",
-  role: "Касиер",
-  isAdmin: true,
-  due: 0,
-  stats: { totalUnits: 54, debtorsCount: 12, overdueMonths: 0, monthsSinceStart: 47, yearEndProjection: 100 },
-  cashRunway: { stable: false, months: 4.2, date: "2026-07-01" },
-  allDebtors: [
-    { unit: "Апартамент А9", due: 180 },
-    { unit: "Апартамент А23", due: 140 },
-    { unit: "Апартамент А34", due: 100 },
-    { unit: "Апартамент А46", due: 80 },
-    { unit: "Апартамент А17", due: 40 },
-    { unit: "Апартамент А51", due: 20 },
-    { unit: "Апартамент А3", due: 60 },
-    { unit: "Апартамент А12", due: 40 },
-    { unit: "Апартамент А28", due: 20 },
-    { unit: "Апартамент А38", due: 20 },
-    { unit: "Апартамент А45", due: 20 },
-    { unit: "Апартамент А52", due: 20 }
-  ]
-});
-
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9hMZpDQ-PLtV0KfdftacqZR3AB3KusVmlIqdKA2q5qgxOg5qm9GFKVslpa-lPmQGzhA/exec"; // за реалния портал, замени тук
-
-var EUR_RATE = 1.95583;
-function fmt(n){ return ((Number(n)||0)/EUR_RATE).toLocaleString('bg-BG',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+function fmt(n){ return (Number(n)||0).toLocaleString('bg-BG',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
 if (window.ChartDataLabels) { Chart.register(ChartDataLabels); }
 function monthLabel(key){
   var parts = key.split('-'); var names=['Яну','Фев','Мар','Апр','Май','Юни','Юли','Авг','Сеп','Окт','Ное','Дек'];
@@ -274,12 +247,12 @@ function drawAdminChart(d){
   box.innerHTML = '<canvas id="allDebtorsChart"></canvas>';
   box.style.height = Math.max(300, 34 * list.length) + 'px';
   var ctx = document.getElementById('allDebtorsChart').getContext('2d');
-  var maxVal = Math.max.apply(null, list.map(function(x){ return x.due / EUR_RATE; }));
+  var maxVal = Math.max.apply(null, list.map(function(x){ return x.due; }));
   window.__adminChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: list.map(function(x){ return x.unit.replace('Апартамент ',''); }),
-      datasets: [{ label: 'Дължимо', data: list.map(function(x){ return x.due / EUR_RATE; }), backgroundColor: '#d97706', borderRadius: 4 }]
+      datasets: [{ label: 'Дължимо', data: list.map(function(x){ return x.due; }), backgroundColor: '#d97706', borderRadius: 4 }]
     },
     options: {
       indexAxis: 'y',
@@ -303,24 +276,123 @@ function drawAdminChart(d){
   });
 }
 
-function loadDemo(){
-  render(DEMO_DATA);
-  document.getElementById('gate').classList.add('hidden');
-  document.getElementById('result').classList.remove('hidden');
-}
+var IS_DEMO_MODE = SCRIPT_URL.indexOf('PASTE_YOUR') !== -1;
 
-function loadAdminDemo(){
-  render(ADMIN_DEMO_DATA);
-  document.getElementById('gate').classList.add('hidden');
-  document.getElementById('result').classList.remove('hidden');
+async function loadStatus(code, silent){
+  var errEl = document.getElementById('err');
+  if (!silent) errEl.style.display = 'none';
+  try {
+    var res = await fetch(SCRIPT_URL + '?action=getStatus&code=' + encodeURIComponent(code));
+    var data = await res.json();
+    if (!data.ok) {
+      if (!silent) { errEl.textContent = data.error || 'Невалиден код.'; errEl.style.display = 'block'; }
+      return false;
+    }
+    window.__activeCode = code;
+    render(data);
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('result').classList.remove('hidden');
+    resetSessionTimer();
+    return true;
+  } catch (e) {
+    if (!silent) { errEl.textContent = 'Грешка при връзка. Опитай отново.'; errEl.style.display = 'block'; }
+    return false;
+  }
 }
 
 async function checkCode(){
   var code = document.getElementById('code').value.trim().toUpperCase();
-  var errEl = document.getElementById('err');
-  errEl.style.display = 'block';
+  var btn = document.getElementById('enter');
   if (!code) return;
+  btn.disabled = true; btn.textContent = 'Зареждане...';
+  await loadStatus(code, false);
+  btn.disabled = false; btn.textContent = 'Влез';
 }
+
+// ---- Сигнали ----
+async function submitSignal(){
+  var textEl = document.getElementById('signalText');
+  var catEl = document.getElementById('signalCategory');
+  var msgEl = document.getElementById('signalMsg');
+  var text = textEl.value.trim();
+  if (!text) {
+    msgEl.className = 'signal-msg error'; msgEl.textContent = 'Моля, опиши проблема.'; msgEl.style.display = 'block';
+    return;
+  }
+  try {
+    var res = await fetch(SCRIPT_URL + '?action=submitSignal&code=' + encodeURIComponent(window.__activeCode) + '&text=' + encodeURIComponent(text) + '&category=' + encodeURIComponent(catEl.value));
+    var data = await res.json();
+    if (data.ok) {
+      msgEl.className = 'signal-msg ok'; msgEl.textContent = 'Сигналът е изпратен успешно.'; msgEl.style.display = 'block';
+      textEl.value = '';
+      await loadStatus(window.__activeCode, true);
+    } else {
+      msgEl.className = 'signal-msg error'; msgEl.textContent = data.error || 'Грешка при изпращане.'; msgEl.style.display = 'block';
+    }
+  } catch (e) {
+    msgEl.className = 'signal-msg error'; msgEl.textContent = 'Грешка при връзка.'; msgEl.style.display = 'block';
+  }
+}
+
+async function resolveSignal(id){
+  try {
+    var res = await fetch(SCRIPT_URL + '?action=resolveSignal&code=' + encodeURIComponent(window.__activeCode) + '&id=' + encodeURIComponent(id));
+    var data = await res.json();
+    if (data.ok) { await loadStatus(window.__activeCode, true); }
+    else { alert(data.error || 'Грешка.'); }
+  } catch (e) { alert('Грешка при връзка.'); }
+}
+
+// ---- Export CSV (само админ) ----
+function toCsvValue_(v){
+  var s = String(v == null ? '' : v).replace(/"/g, '""');
+  return '"' + s + '"';
+}
+function downloadCsv_(filename, rows){
+  var csv = rows.map(function(r){ return r.map(toCsvValue_).join(','); }).join('\r\n');
+  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+async function exportCsv(){
+  try {
+    var res = await fetch(SCRIPT_URL + '?action=exportData&code=' + encodeURIComponent(window.__activeCode));
+    var data = await res.json();
+    if (!data.ok) { alert(data.error || 'Грешка при износ.'); return; }
+    var payRows = [['Дата','Апартамент','Сума','Валута','Начин','Бележка']].concat(
+      (data.payments||[]).map(function(p){ return [formatDateShort(p.date), p.unit, p.amount, p.currency, p.method, p.note]; })
+    );
+    downloadCsv_('plashtania_' + todayStr_() + '.csv', payRows);
+    var budRows = [['Дата','Тип','Категория','Сума','Валута','Бележка']].concat(
+      (data.budget||[]).map(function(b){ return [formatDateShort(b.date), b.type, b.category, b.amount, b.currency, b.note]; })
+    );
+    downloadCsv_('byudzhet_' + todayStr_() + '.csv', budRows);
+  } catch (e) { alert('Грешка при връзка.'); }
+}
+function todayStr_(){
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+// ---- Session timeout (10 мин бездействие) ----
+var __sessionTimer = null;
+function resetSessionTimer(){
+  if (__sessionTimer) clearTimeout(__sessionTimer);
+  __sessionTimer = setTimeout(function(){
+    if (!document.getElementById('result').classList.contains('hidden')) {
+      alert('Сесията изтече поради неактивност. Ще влезеш отново с кода си.');
+      location.reload();
+    }
+  }, 10 * 60 * 1000);
+}
+['click','keydown','touchstart','scroll'].forEach(function(evt){
+  document.addEventListener(evt, function(){
+    if (!document.getElementById('result').classList.contains('hidden')) resetSessionTimer();
+  }, { passive: true });
+});
 
 function escapeHtml(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -347,8 +419,9 @@ function render(d){
   }).join('') || '<div style="color:var(--muted);font-size:13px">Няма скорошни записи.</div>';
 
   var protocolsHtml = (d.protocols || []).map(function(p){
+    var linkHtml = (p.link && /^https?:\/\//.test(p.link)) ? ' · <a href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener" style="color:var(--teal-deep);font-weight:700">Свали протокол ↗</a>' : '';
     return '<div class="journal-row" style="align-items:flex-start"><div class="j-left"><strong>' + escapeHtml(p.topics) + '</strong>'
-      + '<span class="j-date">' + escapeHtml(formatDateShort(p.date)) + ' — ' + escapeHtml(p.type) + '</span>'
+      + '<span class="j-date">' + escapeHtml(formatDateShort(p.date)) + ' — ' + escapeHtml(p.type) + linkHtml + '</span>'
       + '<div style="font-size:12px;color:var(--muted);margin-top:4px">' + escapeHtml(p.decisions) + '</div></div></div>';
   }).join('') || '<div style="color:var(--muted);font-size:13px">Няма качени протоколи все още.</div>';
 
@@ -382,6 +455,31 @@ function render(d){
     }
   }
 
+  var contactsHtml = (d.contacts || []).filter(function(c){ return c.phone; }).map(function(c){
+    var telHref = 'tel:' + String(c.phone).replace(/[^\d+]/g, '');
+    return '<div class="contact-row"><div><div class="contact-role">' + escapeHtml(c.role) + '</div>'
+      + (c.note ? '<span class="contact-note">' + escapeHtml(c.note) + '</span>' : '') + '</div>'
+      + '<a class="contact-call" href="' + telHref + '">📞 ' + escapeHtml(c.phone) + '</a></div>';
+  }).join('') || '<div style="color:var(--muted);font-size:13px">Няма въведени контакти все още.</div>';
+
+  var statusClassMap = { "Нов": "new", "В процес": "progress", "Решен": "done" };
+  var signalsListHtml = (d.signals || []).map(function(s){
+    var cls = statusClassMap[s.status] || 'new';
+    var resolveBtn = (d.isAdmin && s.status !== 'Решен') ? '<button class="signal-resolve" onclick="resolveSignal(\'' + s.id + '\')">Маркирай решен</button>' : '';
+    return '<div class="signal-row"><div class="signal-top"><div class="signal-text">' + escapeHtml(s.text)
+      + '<div class="signal-meta">' + escapeHtml(s.unit) + ' · ' + escapeHtml(formatDateShort(s.date)) + '</div></div>'
+      + '<span class="signal-status ' + cls + '">' + escapeHtml(s.status) + '</span></div>'
+      + (s.note ? '<div class="signal-note">↳ ' + escapeHtml(s.note) + '</div>' : '')
+      + resolveBtn + '</div>';
+  }).join('') || '<div style="color:var(--muted);font-size:13px">Няма подадени сигнали.</div>';
+
+  var signalFormHtml = '<div class="signal-form">'
+    + '<select id="signalCategory"><option value="Авария">Авария</option><option value="Ремонт">Ремонт</option><option value="Друго">Друго</option></select>'
+    + '<textarea id="signalText" placeholder="Опиши накратко проблема (напр. изгоряла крушка на етаж 3)"></textarea>'
+    + '<button class="signal-submit" onclick="submitSignal()">Изпрати сигнал</button>'
+    + '<div class="signal-msg" id="signalMsg"></div>'
+    + '</div>';
+
   document.getElementById('result').innerHTML =
     '<div class="unit-card">'
       + '<div class="eyebrow">Твоят апартамент</div>'
@@ -408,6 +506,10 @@ function render(d){
     + '<div class="section"><div class="section-label">Отчетност</div><div class="section-title">Годишен отчет</div>' + yearlyHtml + '</div>'
     + '<div class="section"><div class="section-label">Дневник</div><div class="section-title">Последни разходи</div>' + journalHtml + '</div>'
     + '<div class="section"><div class="section-label">Архив</div><div class="section-title">Протоколи от общи събрания</div>' + protocolsHtml + '</div>'
+    + '<div class="section"><div class="section-label">Помощ</div><div class="section-title">Важни телефони</div>' + contactsHtml + '</div>'
+    + '<div class="section"><div class="section-label">Поддръжка</div><div class="section-title">Сигнали за повреди</div>'
+      + '<div style="margin-bottom:14px">' + signalsListHtml + '</div>' + signalFormHtml + '</div>'
+    + (d.isAdmin ? '<button class="export-btn" onclick="exportCsv()">📥 Изтегли всички данни (CSV)</button>' : '')
     + '<div class="logout"><button onclick="location.reload()">Изход</button></div>';
 
   drawCharts(d);
@@ -424,7 +526,7 @@ function drawCharts(d){
       type: 'bar',
       data: {
         labels: d.debtorsChart.map(function(x){ return x.unit.replace('Апартамент ',''); }),
-        datasets: [{ label: 'Дължимо', data: d.debtorsChart.map(function(x){ return x.due / EUR_RATE; }), backgroundColor: amber, borderRadius: 4 }]
+        datasets: [{ label: 'Дължимо', data: d.debtorsChart.map(function(x){ return x.due; }), backgroundColor: amber, borderRadius: 4 }]
       },
       options: {
         indexAxis: 'y',
@@ -452,8 +554,8 @@ function drawCharts(d){
     data: {
       labels: labels,
       datasets: [
-        { label: 'Приходи', data: (d.budgetTrend||[]).map(function(x){return x.income / EUR_RATE;}), borderColor: green, backgroundColor: green, tension: .3, pointRadius: 3 },
-        { label: 'Разходи', data: (d.budgetTrend||[]).map(function(x){return x.expense / EUR_RATE;}), borderColor: red, backgroundColor: red, tension: .3, pointRadius: 3 }
+        { label: 'Приходи', data: (d.budgetTrend||[]).map(function(x){return x.income;}), borderColor: green, backgroundColor: green, tension: .3, pointRadius: 3 },
+        { label: 'Разходи', data: (d.budgetTrend||[]).map(function(x){return x.expense;}), borderColor: red, backgroundColor: red, tension: .3, pointRadius: 3 }
       ]
     },
     options: {
@@ -475,6 +577,51 @@ function drawCharts(d){
 }
 
 document.getElementById('code').addEventListener('keydown', function(e){ if (e.key === 'Enter') checkCode(); });
+
+// ---- PWA: service worker + install banner ----
+if ('serviceWorker' in navigator && !IS_DEMO_MODE) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+
+var __deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  __deferredInstallPrompt = e;
+  showInstallBanner(false);
+});
+
+function isStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function isIOS(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+function showInstallBanner(iosMode){
+  if (isStandalone() || localStorage.getItem('vhodA_installDismissed') === '1') return;
+  var banner = document.getElementById('installBanner');
+  var btn = document.getElementById('installBtn');
+  var text = document.getElementById('installText');
+  if (iosMode) {
+    text.textContent = '📲 На iPhone: натисни Сподели, после "Добави към начален екран"';
+    btn.classList.add('hidden');
+  } else {
+    text.textContent = '📲 Инсталирай портала на началния екран за по-бърз достъп';
+    btn.classList.remove('hidden');
+  }
+  banner.classList.remove('hidden');
+}
+function doInstall(){
+  if (!__deferredInstallPrompt) return;
+  __deferredInstallPrompt.prompt();
+  __deferredInstallPrompt.userChoice.then(function(){ __deferredInstallPrompt = null; dismissInstall(); });
+}
+function dismissInstall(){
+  document.getElementById('installBanner').classList.add('hidden');
+  localStorage.setItem('vhodA_installDismissed', '1');
+}
+if (isIOS() && !isStandalone()) { showInstallBanner(true); }
 </script>
 </body>
 </html>
