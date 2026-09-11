@@ -278,11 +278,17 @@ function drawAdminChart(d){
 
 var IS_DEMO_MODE = SCRIPT_URL.indexOf('PASTE_YOUR') !== -1;
 
+// Кодът за достъп винаги се праща през POST body (не през URL query string), за да не се
+// логва/пази в browser history, server logs или referrer headers.
+function postAction_(params){
+  return fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams(params) });
+}
+
 async function loadStatus(code, silent){
   var errEl = document.getElementById('err');
   if (!silent) errEl.style.display = 'none';
   try {
-    var res = await fetch(SCRIPT_URL + '?action=getStatus&code=' + encodeURIComponent(code));
+    var res = await postAction_({ action: 'getStatus', code: code });
     var data = await res.json();
     if (!data.ok) {
       if (!silent) { errEl.textContent = data.error || 'Невалиден код.'; errEl.style.display = 'block'; }
@@ -320,7 +326,7 @@ async function submitSignal(){
     return;
   }
   try {
-    var res = await fetch(SCRIPT_URL + '?action=submitSignal&code=' + encodeURIComponent(window.__activeCode) + '&text=' + encodeURIComponent(text) + '&category=' + encodeURIComponent(catEl.value));
+    var res = await postAction_({ action: 'submitSignal', code: window.__activeCode, text: text, category: catEl.value });
     var data = await res.json();
     if (data.ok) {
       msgEl.className = 'signal-msg ok'; msgEl.textContent = 'Сигналът е изпратен успешно.'; msgEl.style.display = 'block';
@@ -336,7 +342,7 @@ async function submitSignal(){
 
 async function resolveSignal(id){
   try {
-    var res = await fetch(SCRIPT_URL + '?action=resolveSignal&code=' + encodeURIComponent(window.__activeCode) + '&id=' + encodeURIComponent(id));
+    var res = await postAction_({ action: 'resolveSignal', code: window.__activeCode, id: id });
     var data = await res.json();
     if (data.ok) { await loadStatus(window.__activeCode, true); }
     else { alert(data.error || 'Грешка.'); }
@@ -359,7 +365,7 @@ function downloadCsv_(filename, rows){
 }
 async function exportCsv(){
   try {
-    var res = await fetch(SCRIPT_URL + '?action=exportData&code=' + encodeURIComponent(window.__activeCode));
+    var res = await postAction_({ action: 'exportData', code: window.__activeCode });
     var data = await res.json();
     if (!data.ok) { alert(data.error || 'Грешка при износ.'); return; }
     var payRows = [['Дата','Апартамент','Сума','Валута','Начин','Бележка']].concat(
