@@ -586,8 +586,10 @@ function render(d){
     return '<div class="journal-row proto-row show" data-year="' + yr + '" style="align-items:flex-start"><div class="j-left"><strong>' + escapeHtml(p.topics) + '</strong>'
       + '<span class="j-date">' + escapeHtml(formatDateShort(p.date)) + '<span class="proto-type-chip ' + typeCls + '">' + escapeHtml(p.type) + '</span>' + linkHtml + '</span>'
       + '<div style="font-size:12px;color:var(--muted);margin-top:4px">' + escapeHtml(p.decisions) + '</div></div></div>';
-  }).join('') || '<div style="color:var(--muted);font-size:13px">Няма качени протоколи все още.</div>';
-  protocolsHtml = protoFiltersHtml + protocolsHtml;
+  }).join('');
+  protocolsHtml = protoFiltersHtml + (protocolsHtml
+    ? '<div class="report-list">' + protocolsHtml + '</div>'
+    : '<div style="color:var(--muted);font-size:13px">Няма качени протоколи все още.</div>');
 
   var s = d.stats || {};
   var statStripHtml = '<div class="stat-strip">'
@@ -749,9 +751,9 @@ function drawCharts(d){
     data: {
       labels: labels,
       datasets: [
-        { type: 'bar', label: 'Приходи', data: incomeData, backgroundColor: green, borderRadius: 3, order: 2 },
-        { type: 'bar', label: 'Разходи', data: expenseData, backgroundColor: red, borderRadius: 3, order: 2 },
-        { type: 'line', label: 'Каса (кумулативно)', data: cashData, borderColor: '#192166', backgroundColor: '#192166', borderWidth: 2, pointRadius: 0, tension: .25, order: 1 }
+        { type: 'bar', label: 'Приходи', data: incomeData, backgroundColor: green, borderRadius: 3, order: 2, yAxisID: 'y' },
+        { type: 'bar', label: 'Разходи', data: expenseData, backgroundColor: red, borderRadius: 3, order: 2, yAxisID: 'y' },
+        { type: 'line', label: 'Каса (кумулативно)', data: cashData, borderColor: '#192166', backgroundColor: '#192166', borderWidth: 2, pointRadius: 0, tension: .25, order: 1, yAxisID: 'y1' }
       ]
     },
     options: {
@@ -776,7 +778,8 @@ function drawCharts(d){
           },
           grid: { display: false }
         },
-        y: { stacked: true, ticks: { color: muted, font: { size: 11 }, callback: function(v){ return v + ' €'; } }, grid: { color: gridColor } }
+        y: { stacked: true, position: 'left', ticks: { color: muted, font: { size: 11 }, callback: function(v){ return v + ' €'; } }, grid: { color: gridColor } },
+        y1: { position: 'right', ticks: { color: '#192166', font: { size: 10 }, callback: function(v){ return v + ' €'; } }, grid: { display: false } }
       }
     }
   });
