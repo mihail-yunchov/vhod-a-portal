@@ -38,9 +38,9 @@
 
   .demo-banner{background:var(--amber-tint);color:#8a5205;border:1px solid rgba(217,119,6,0.3);font-size:12px;text-align:center;padding:8px;border-radius:20px;margin-bottom:18px;font-weight:700;letter-spacing:.2px}
 
-  .brand{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
-  .brand h1{font-family:'Lora',serif;font-weight:800;font-size:24px;color:var(--navy);letter-spacing:-0.02em}
-  .brand h1 em{font-style:italic;font-weight:600;color:var(--teal-deep)}
+  .brand{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+  .brand h1{font-family:'Lora',serif;font-weight:800;font-size:24px;line-height:1.2;color:var(--navy);letter-spacing:-0.02em}
+  .brand h1 em{display:block;font-style:italic;font-weight:600;color:var(--teal-deep)}
   .brand span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-weight:700}
 
   .install-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--grad-soft);border:1px solid var(--border);border-radius:11px;padding:10px 14px;margin-bottom:18px;font-size:12px;font-weight:700;color:var(--navy)}
@@ -50,9 +50,9 @@
   .gate{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:26px 22px;box-shadow:0 2px 10px rgba(25,33,102,0.06)}
   .gate p{color:var(--muted);font-size:14px;margin-bottom:18px}
   .code-row{display:flex;gap:10px}
-  input#code{flex:1;min-height:48px;font-family:'Lora',serif;font-size:22px;letter-spacing:4px;text-transform:uppercase;text-align:center;border:1.5px solid var(--border);border-radius:9px;padding:12px 10px;background:var(--bg);color:var(--navy);outline:none}
+  input#code{flex:1 1 auto;min-width:0;min-height:48px;font-family:'Lora',serif;font-size:22px;letter-spacing:4px;text-transform:uppercase;text-align:center;border:1.5px solid var(--border);border-radius:9px;padding:12px 10px;background:var(--bg);color:var(--navy);outline:none}
   input#code:focus{border-color:var(--teal-deep);box-shadow:0 0 0 3px var(--teal-tint)}
-  button#enter{min-height:48px;min-width:64px;background:var(--grad-primary);color:#fff;border:none;border-radius:9px;padding:0 22px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Nunito Sans',sans-serif}
+  button#enter{flex:0 0 auto;min-height:48px;min-width:64px;max-width:44vw;background:var(--grad-primary);color:#fff;border:none;border-radius:9px;padding:0 16px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Nunito Sans',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   button#enter:disabled{opacity:.5;cursor:not-allowed}
   .err{color:var(--red);font-size:13px;margin-top:12px;display:none}
   .hidden{display:none}
@@ -129,7 +129,8 @@
   .jgroup[open] summary .jarrow{transform:rotate(180deg)}
   .jgroup-sub{padding:0 0 10px}
   .jgroup-item{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:12px;border-top:1px dashed var(--border)}
-  .jgroup-item > div:first-child{flex:1 1 auto;min-width:0}
+  .jgroup-item-main{flex:1 1 auto;min-width:0;font-weight:600;color:var(--text)}
+  .jgroup-item-detail{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:1px}
   .jtag{display:inline-block;font-size:10px;font-weight:700;color:var(--teal-deep);background:var(--teal-tint);border-radius:10px;padding:2px 8px;margin-right:6px;white-space:nowrap}
 
   .report-list{display:flex;flex-direction:column;gap:8px}
@@ -244,7 +245,7 @@
 <body>
 <div class="wrap">
   <div class="brand">
-    <h1>Вход А <em>Grand Azurro</em></h1>
+    <h1>Вход А<em>Grand Azurro</em></h1>
     <span>Портал за собственици</span>
   </div>
 
@@ -326,21 +327,42 @@ function fallbackCopy_(text, cb){
   if (cb) cb();
 }
 
-// Групира "Последни разходи" по общ таг в началото на бележката, напр. "[Отчет апр-юни 2023] ...".
-// Записи без такъв таг си остават единични редове, както преди.
+// Групира "Последни разходи": (1) по общ таг в началото на бележката, напр. "[Отчет апр-юни 2023] ...",
+// или (2) — когато няма такъв таг — по КАЛЕНДАРЕН МЕСЕЦ: всички редове от един и същ месец (независимо
+// от точния ден) автоматично се сгъват в една карта, без да е нужно ръчно таговане.
+// Единичен ред за даден месец си остава обикновен ред, както досега.
+function shortDetail_(note){
+  var s = String(note || '');
+  var idx = s.lastIndexOf(' — ');
+  return idx >= 0 ? s.slice(idx + 3) : s;
+}
+function monthKeyFromDate_(v){
+  var d = new Date(v);
+  if (isNaN(d.getTime())) return String(v || '');
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+function monthNameLong_(key){
+  var parts = String(key).split('-');
+  var names = ['януари','февруари','март','април','май','юни','юли','август','септември','октомври','ноември','декември'];
+  var name = names[Number(parts[1]) - 1];
+  return name ? (name + ' ' + parts[0]) : String(key);
+}
 function groupJournal_(entries){
   var groups = []; var byKey = {};
   (entries || []).forEach(function(j){
     var m = String(j.note || '').match(/^\[(.+?)\]\s*(.*)$/);
-    var key = m ? m[1] : null;
+    var tagLabel = m ? m[1] : null;
     var detail = m ? m[2] : j.note;
-    if (key && byKey[key]) {
+    var mKey = monthKeyFromDate_(j.date);
+    var key = tagLabel ? ('tag:' + tagLabel) : ('month:' + mKey);
+    if (byKey[key]) {
       byKey[key].items.push({ category: j.category, amount: j.amount, detail: detail });
       byKey[key].total += j.amount;
+      if (j.date && (!byKey[key].date || String(j.date) > String(byKey[key].date))) byKey[key].date = j.date;
     } else {
-      var g = { label: key, items: [{ category: j.category, amount: j.amount, detail: detail }], total: j.amount, date: j.date };
+      var g = { label: tagLabel, items: [{ category: j.category, amount: j.amount, detail: detail }], total: j.amount, date: j.date, monthKey: mKey };
       groups.push(g);
-      if (key) byKey[key] = g;
+      byKey[key] = g;
     }
   });
   return groups;
@@ -558,12 +580,16 @@ function render(d){
 
   var journalGroups = groupJournal_(d.recentJournal);
   var journalHtml = journalGroups.map(function(g){
-    if (g.label && g.items.length > 1) {
+    if (g.items.length > 1) {
+      var groupTitle = g.label || ('Разходи за ' + monthNameLong_(g.monthKey));
+      var groupMeta = g.label ? (escapeHtml(formatDateShort(g.date)) + ' · ' + g.items.length + ' записа') : (g.items.length + ' записа');
       var subHtml = g.items.map(function(it){
-        return '<div class="jgroup-item"><div><span class="jtag">' + escapeHtml(it.category) + '</span>' + escapeHtml(it.detail || '') + '</div>'
+        var shortD = shortDetail_(it.detail);
+        return '<div class="jgroup-item"><div class="jgroup-item-main">' + escapeHtml(it.category)
+          + (shortD ? '<span class="jgroup-item-detail">' + escapeHtml(shortD) + '</span>' : '') + '</div>'
           + '<div class="j-amt exp">-' + fmt(it.amount) + '</div></div>';
       }).join('');
-      return '<details class="jgroup"><summary><div class="j-left">' + escapeHtml(g.label) + '<span class="j-date">' + escapeHtml(formatDateShort(g.date)) + ' · ' + g.items.length + ' записа</span></div>'
+      return '<details class="jgroup"><summary><div class="j-left">' + escapeHtml(groupTitle) + '<span class="j-date">' + groupMeta + '</span></div>'
         + '<div style="display:flex;align-items:center;gap:8px"><span class="j-amt exp">-' + fmt(g.total) + '</span><span class="jarrow">▾</span></div></summary>'
         + '<div class="jgroup-sub">' + subHtml + '</div></details>';
     }
