@@ -286,9 +286,20 @@ function monthLabel(key){
   var parts = key.split('-'); var names=['Яну','Фев','Мар','Апр','Май','Юни','Юли','Авг','Сеп','Окт','Ное','Дек'];
   return names[Number(parts[1])-1] + " '" + parts[0].slice(2);
 }
+// Бекендът връща датите на журналните записи като текст "ДД.ММ.ГГГГ" (клетките в БЮДЖЕТ са текстови,
+// не истински Date) — native new Date("28.08.2026") НЕ го парсва (връща Invalid Date), затова първо
+// пробваме ръчно това конкретно текстово изписване, преди да опитаме стандартния парсър.
+function parseFlexDate_(v){
+  if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
+  var s = String(v || '').trim();
+  var m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+  var d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
 function formatDateShort(v){
-  var d = new Date(v);
-  if (isNaN(d.getTime())) return String(v||'');
+  var d = parseFlexDate_(v);
+  if (!d) return String(v||'');
   return String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear();
 }
 function yearlyFromTrend(trend){
@@ -338,8 +349,8 @@ function shortDetail_(note){
   return idx >= 0 ? s.slice(idx + 3) : s;
 }
 function monthKeyFromDate_(v){
-  var d = new Date(v);
-  if (isNaN(d.getTime())) return String(v || '');
+  var d = parseFlexDate_(v);
+  if (!d) return String(v || '');
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
 }
 function monthNameLong_(key){
@@ -376,7 +387,12 @@ function groupJournalByMonth_(entries){
     byMonth[mKey].total += j.amount;
   });
   Object.keys(byMonth).forEach(function(k){
-    byMonth[k].items.sort(function(a, b){ return String(b.date) > String(a.date) ? 1 : (String(b.date) < String(a.date) ? -1 : 0); });
+    // Сравняваме по РЕАЛНО парснати дати (не като текст) — "ДД.ММ.ГГГГ" низове НЕ се подреждат
+    // правилно лексикографски (напр. "15.03.2026" би излязло преди "22.01.2026" по букви).
+    byMonth[k].items.sort(function(a, b){
+      var da = parseFlexDate_(a.date), db = parseFlexDate_(b.date);
+      return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
+    });
   });
   var now = new Date();
   var groups = [];
@@ -620,7 +636,7 @@ function render(d){
       + '<div class="jgroup-sub">' + subHtml + '</div></details>';
   }).join('');
 
-  var protoYears = Array.from(new Set((d.protocols || []).map(function(p){ var dt = new Date(p.date); return isNaN(dt.getTime()) ? null : dt.getFullYear(); }).filter(Boolean))).sort().reverse();
+  var protoYears = Array.from(new Set((d.protocols || []).map(function(p){ var dt = parseFlexDate_(p.date); return dt ? dt.getFullYear() : null; }).filter(Boolean))).sort().reverse();
   var protoFiltersHtml = protoYears.length > 1
     ? '<div class="proto-filters"><button class="proto-chip active" onclick="filterProtocols(this,\'all\')">Всички</button>'
       + protoYears.map(function(y){ return '<button class="proto-chip" onclick="filterProtocols(this,\'' + y + '\')">' + y + '</button>'; }).join('')
@@ -629,7 +645,7 @@ function render(d){
   var protoTypeClassMap = { 'Редовно': 'regular', 'Извънредно': 'extra' };
   var protocolsHtml = (d.protocols || []).map(function(p){
     var linkHtml = (p.link && /^https?:\/\//.test(p.link)) ? ' · <a href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener" style="color:var(--teal-deep);font-weight:700">Свали протокол ↗</a>' : '';
-    var dt = new Date(p.date); var yr = isNaN(dt.getTime()) ? '' : dt.getFullYear();
+    var dt = parseFlexDate_(p.date); var yr = dt ? dt.getFullYear() : '';
     var typeCls = protoTypeClassMap[p.type] || 'regular';
     return '<div class="journal-row proto-row show" data-year="' + yr + '" style="align-items:flex-start"><div class="j-left"><strong>' + escapeHtml(p.topics) + '</strong>'
       + '<span class="j-date">' + escapeHtml(formatDateShort(p.date)) + '<span class="proto-type-chip ' + typeCls + '">' + escapeHtml(p.type) + '</span>' + linkHtml + '</span>'
