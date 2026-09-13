@@ -98,6 +98,8 @@
   .budget-card .b-label{font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:.06em;font-weight:700}
   .budget-card .b-val{font-family:'Lora',serif;font-size:17px;font-weight:800;margin-top:4px;overflow-wrap:break-word}
   .b-val.inc{color:var(--green)} .b-val.exp{color:var(--red)} .b-val.bal{color:var(--navy)}
+  .budget-card .b-sub{margin-top:6px;font-size:9.5px;color:var(--muted);line-height:1.55;font-weight:600}
+  .budget-card .b-sub b{color:var(--navy);font-weight:800}
 
   .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:0 2px 10px rgba(25,33,102,0.05)}
   .chart-box{position:relative;width:100%;height:220px}
@@ -596,8 +598,17 @@ function render(d){
   var due = Number(d.due) || 0;
   var totals = d.buildingTotals || {};
 
+  // Законова разбивка на СЪБРАНИТЕ такси: ФРО (Фонд Ремонт и Обновяване) vs. Поддръжка + управление —
+  // показва се с по-ситен шрифт под общата сума на "Приходи". Обхваща само таксите от апартаментите
+  // (не и евентуални извънредни приходи), затова двете суми под линийката могат да излязат по-малко
+  // от общите "Приходи" отгоре — това е очаквано, не грешка.
+  var froSubHtml = '';
+  if (d.froCollected != null || d.maintenanceCollected != null) {
+    froSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froCollected || 0) + '</b></div>'
+      + '<div>Поддръжка: <b>' + fmt(d.maintenanceCollected || 0) + '</b></div></div>';
+  }
   var budgetHtml = '<div class="budget-grid">'
-    + '<div class="budget-card"><div class="b-label">Приходи</div><div class="b-val inc">' + fmt(totals.income) + '</div></div>'
+    + '<div class="budget-card"><div class="b-label">Приходи</div><div class="b-val inc">' + fmt(totals.income) + '</div>' + froSubHtml + '</div>'
     + '<div class="budget-card"><div class="b-label">Разходи</div><div class="b-val exp">' + fmt(totals.expense) + '</div></div>'
     + '<div class="budget-card"><div class="b-label">Каса</div><div class="b-val bal">' + fmt(totals.balance) + '</div></div>'
     + '</div>';
