@@ -81,6 +81,7 @@
   .pay-field-main{flex:1 1 auto;min-width:0}
   .pay-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
   .pay-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;font-weight:600;color:var(--navy);letter-spacing:.02em;word-break:break-all;margin-top:2px}
+  .pay-val.pay-val-ref{font-family:'Nunito Sans',sans-serif;font-weight:700;letter-spacing:normal;word-break:normal;overflow-wrap:break-word;line-height:1.4}
   .pay-copy{flex:0 0 auto;min-height:38px;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:0 14px;font-weight:800;font-size:12px;cursor:pointer;font-family:'Nunito Sans',sans-serif;white-space:nowrap}
   .pay-copy.alt{background:var(--surface);color:var(--navy);border:1px solid var(--border)}
   .pay-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
@@ -702,11 +703,11 @@ function render(d){
     payBoxHtml = '<div class="pay-box"><div class="pay-heading">Как да платя</div>'
       + '<div class="pay-field"><div class="pay-field-main"><div class="pay-label">IBAN за такси</div><div class="pay-val" id="payIban">' + escapeHtml(d.bankIban) + '</div></div>'
       + '<button class="pay-copy" onclick="copyIban()">📋 Копирай</button></div>'
-      + '<div class="pay-field"><div class="pay-field-main"><div class="pay-label">Основание за превода</div><div class="pay-val" id="payRef">' + escapeHtml(payRef) + '</div></div>'
+      + '<div class="pay-field"><div class="pay-field-main"><div class="pay-label">Основание за превода</div><div class="pay-val pay-val-ref" id="payRef">' + escapeHtml(payRef) + '</div></div>'
       + '<button class="pay-copy alt" onclick="copyRef()">📋 Копирай</button></div>'
       + '<div class="pay-copied" id="payCopied">✅ IBAN копиран</div>'
       + '<div class="pay-copied" id="payRefCopied">✅ Основанието е копирано</div>'
-      + '<div class="pay-note">Плащанията се нанасят веднъж месечно, до 10-о число за предходния месец. Задължително посочвай апартамента в основанието, за да се разпознае плащането.</div>'
+      + '<div class="pay-note">Плащанията се нанасят веднъж месечно, до 10-о число за предходния месец. Задължително посочвай апартамента в основанието, както и периода за който плащаш, за да се разпознае плащането.</div>'
       + '</div>';
   }
 
