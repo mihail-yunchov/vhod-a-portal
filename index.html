@@ -607,10 +607,22 @@ function render(d){
     froSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froCollected || 0) + '</b></div>'
       + '<div>Поддръжка: <b>' + fmt(d.maintenanceCollected || 0) + '</b></div></div>';
   }
+  // Същата разбивка и за Разходи (по категория, чрез листа ПЕРА в бекенда) и за Каса
+  // (Каса по перо = събрано минус изразходвано за него) — виж бележките в Code.gs.
+  var froExpSubHtml = '';
+  if (d.froExpense != null || d.maintenanceExpense != null) {
+    froExpSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froExpense || 0) + '</b></div>'
+      + '<div>Поддръжка: <b>' + fmt(d.maintenanceExpense || 0) + '</b></div></div>';
+  }
+  var froBalSubHtml = '';
+  if (d.froBalance != null || d.maintenanceBalance != null) {
+    froBalSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froBalance || 0) + '</b></div>'
+      + '<div>Поддръжка: <b>' + fmt(d.maintenanceBalance || 0) + '</b></div></div>';
+  }
   var budgetHtml = '<div class="budget-grid">'
     + '<div class="budget-card"><div class="b-label">Приходи</div><div class="b-val inc">' + fmt(totals.income) + '</div>' + froSubHtml + '</div>'
-    + '<div class="budget-card"><div class="b-label">Разходи</div><div class="b-val exp">' + fmt(totals.expense) + '</div></div>'
-    + '<div class="budget-card"><div class="b-label">Каса</div><div class="b-val bal">' + fmt(totals.balance) + '</div></div>'
+    + '<div class="budget-card"><div class="b-label">Разходи</div><div class="b-val exp">' + fmt(totals.expense) + '</div>' + froExpSubHtml + '</div>'
+    + '<div class="budget-card"><div class="b-label">Каса</div><div class="b-val bal">' + fmt(totals.balance) + '</div>' + froBalSubHtml + '</div>'
     + '</div>';
 
   var yearly = yearlyFromTrend(d.budgetTrend);
