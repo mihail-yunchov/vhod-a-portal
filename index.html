@@ -105,7 +105,7 @@
 
   .debtor-bars{display:flex;flex-direction:column;gap:10px}
   .debtor-bar-row{display:flex;align-items:center;gap:10px}
-  .debtor-bar-id{width:38px;flex:0 0 auto;font-size:12px;font-weight:800;color:var(--navy)}
+  .debtor-bar-id{min-width:38px;max-width:76px;flex:0 0 auto;font-size:12px;font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .debtor-bar-track{flex:1 1 auto;height:20px;background:var(--navy-tint);border-radius:5px;overflow:hidden;min-width:0}
   .debtor-bar-fill{height:100%;border-radius:5px}
   .debtor-bar-sum{width:70px;flex:0 0 auto;text-align:right;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -346,6 +346,20 @@ function monthNameLong_(key){
   var names = ['януари','февруари','март','април','май','юни','юли','август','септември','октомври','ноември','декември'];
   var name = names[Number(parts[1]) - 1];
   return name ? (name + ' ' + parts[0]) : String(key);
+}
+function monthNameOnly_(key){
+  var parts = String(key).split('-');
+  var names = ['януари','февруари','март','април','май','юни','юли','август','септември','октомври','ноември','декември'];
+  return names[Number(parts[1]) - 1] || String(key);
+}
+// Изгражда "Основание за превода" с изричен период, вместо само номера на апартамента —
+// напр. "Апартамент А10 — такси за периода януари - юни 2025" (или само един месец, ако е един).
+function buildPayRef_(unit, fromKey, toKey){
+  if (!fromKey || !toKey) return unit + ' — такса поддръжка';
+  if (fromKey === toKey) return unit + ' — такса за ' + monthNameLong_(fromKey);
+  var sameYear = fromKey.split('-')[0] === toKey.split('-')[0];
+  var fromLabel = sameYear ? monthNameOnly_(fromKey) : monthNameLong_(fromKey);
+  return unit + ' — такси за периода ' + fromLabel + ' - ' + monthNameLong_(toKey);
 }
 function groupJournal_(entries){
   var groups = []; var byKey = {};
@@ -684,7 +698,7 @@ function render(d){
 
   var payBoxHtml = '';
   if (due > 0 && d.bankIban && d.bankIban.toUpperCase().indexOf('ПОПЪЛНИ') === -1) {
-    var payRef = d.unit + ' — такса поддръжка';
+    var payRef = buildPayRef_(d.unit, d.unpaidFrom, d.unpaidTo);
     payBoxHtml = '<div class="pay-box"><div class="pay-heading">Как да платя</div>'
       + '<div class="pay-field"><div class="pay-field-main"><div class="pay-label">IBAN за такси</div><div class="pay-val" id="payIban">' + escapeHtml(d.bankIban) + '</div></div>'
       + '<button class="pay-copy" onclick="copyIban()">📋 Копирай</button></div>'
