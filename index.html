@@ -598,26 +598,28 @@ function render(d){
   var due = Number(d.due) || 0;
   var totals = d.buildingTotals || {};
 
-  // Законова разбивка на СЪБРАНИТЕ такси: ФРО (Фонд Ремонт и Обновяване) vs. Поддръжка + управление —
-  // показва се с по-ситен шрифт под общата сума на "Приходи". Обхваща само таксите от апартаментите
-  // (не и евентуални извънредни приходи), затова двете суми под линийката могат да излязат по-малко
-  // от общите "Приходи" отгоре — това е очаквано, не грешка.
+  // Законова разбивка на СЪБРАНИТЕ такси: ФРО (Фонд Ремонт и Обновяване) vs. ТУП (Такса управление
+  // и поддръжка) — показва се с по-ситен шрифт под общата сума на "Приходи". Обхваща само таксите
+  // от апартаментите (не и евентуални извънредни приходи), затова двете суми под линийката могат
+  // да излязат по-малко от общите "Приходи" отгоре — това е очаквано, не грешка.
+  // (26.09.2026: етикетът е преименуван от "Поддръжка" на "ТУП" по искане на Мишо — стойността
+  // зад него (d.maintenance*) е СЪЩАТА като преди, само надписът се смени, за яснота.)
   var froSubHtml = '';
   if (d.froCollected != null || d.maintenanceCollected != null) {
     froSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froCollected || 0) + '</b></div>'
-      + '<div>Поддръжка: <b>' + fmt(d.maintenanceCollected || 0) + '</b></div></div>';
+      + '<div>ТУП: <b>' + fmt(d.maintenanceCollected || 0) + '</b></div></div>';
   }
   // Същата разбивка и за Разходи (по категория, чрез листа ПЕРА в бекенда) и за Каса
   // (Каса по перо = събрано минус изразходвано за него) — виж бележките в Code.gs.
   var froExpSubHtml = '';
   if (d.froExpense != null || d.maintenanceExpense != null) {
     froExpSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froExpense || 0) + '</b></div>'
-      + '<div>Поддръжка: <b>' + fmt(d.maintenanceExpense || 0) + '</b></div></div>';
+      + '<div>ТУП: <b>' + fmt(d.maintenanceExpense || 0) + '</b></div></div>';
   }
   var froBalSubHtml = '';
   if (d.froBalance != null || d.maintenanceBalance != null) {
     froBalSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froBalance || 0) + '</b></div>'
-      + '<div>Поддръжка: <b>' + fmt(d.maintenanceBalance || 0) + '</b></div></div>';
+      + '<div>ТУП: <b>' + fmt(d.maintenanceBalance || 0) + '</b></div></div>';
   }
   var budgetHtml = '<div class="budget-grid">'
     + '<div class="budget-card"><div class="b-label">Приходи</div><div class="b-val inc">' + fmt(totals.income) + '</div>' + froSubHtml + '</div>'
