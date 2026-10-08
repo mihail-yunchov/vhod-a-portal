@@ -9,8 +9,8 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Вход Б">
-<title>Вход Б — Grand Azurro</title>
+<meta name="apple-mobile-web-app-title" content="Вход А">
+<title>Вход А — Grand Azurro</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,600&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
@@ -36,6 +36,8 @@
     background-image:radial-gradient(circle, rgba(25,33,102,0.05) 1px, transparent 1px); background-size:30px 30px;}
   .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:24px 18px 60px}
 
+  .demo-banner{background:var(--amber-tint);color:#8a5205;border:1px solid rgba(217,119,6,0.3);font-size:12px;text-align:center;padding:8px;border-radius:20px;margin-bottom:18px;font-weight:700;letter-spacing:.2px}
+
   .brand{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
   .brand h1{font-family:'Lora',serif;font-weight:800;font-size:24px;line-height:1.2;color:var(--navy);letter-spacing:-0.02em}
   .brand h1 em{display:block;font-style:italic;font-weight:600;color:var(--teal-deep)}
@@ -55,10 +57,15 @@
   .err{color:var(--red);font-size:13px;margin-top:12px;display:none}
   .hidden{display:none}
 
+  .demo-btn{width:100%;min-height:46px;margin-top:10px;background:var(--teal-tint);color:var(--teal-deep);border:1px solid rgba(0,196,208,.35);border-radius:9px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito Sans',sans-serif}
+  .demo-btn.admin{background:var(--amber-tint);color:#8a5205;border-color:rgba(217,119,6,.35)}
+  .divider{display:flex;align-items:center;gap:10px;margin:16px 0 4px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
   .unit-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:18px;overflow:hidden;box-shadow:0 10px 30px rgba(25,33,102,0.06)}
   .unit-card .eyebrow-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
   .unit-card .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--teal-deep)}
-  .unit-card h2{font-family:'Lora',serif;font-size:26px;font-weight:700;color:var(--navy);margin-top:6px;line-height:1.25}
+  .unit-card h2{font-family:'Lora',serif;font-size:26px;font-weight:700;color:var(--navy);margin-top:6px}
   .unit-card .due{margin-top:14px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;border-top:1px solid var(--border);padding-top:14px}
   .unit-card .due-left{min-width:0}
   .unit-card .due-label{font-size:13px;color:var(--muted)}
@@ -67,14 +74,6 @@
   .due-amt.zero{color:var(--green)} .due-amt.owe{color:var(--red)}
   .updated-badge{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;color:#47517f;background:#f1f4fa;border:1px solid var(--border);border-radius:20px;padding:5px 10px 5px 8px;white-space:nowrap}
   .updated-badge .dot{width:6px;height:6px;border-radius:99px;background:var(--green);flex:0 0 auto}
-
-  .units-split{margin-top:12px;border:1px solid var(--border);border-radius:11px;overflow:hidden}
-  .units-split-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;font-size:13px;border-top:1px solid var(--border)}
-  .units-split-row:first-child{border-top:none}
-  .units-split-name{font-weight:700;color:var(--text);min-width:0}
-  .units-split-meta{display:block;font-size:11px;color:var(--muted);font-weight:500}
-  .units-split-amt{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
-  .units-split-amt.zero{color:var(--green)} .units-split-amt.owe{color:var(--red)}
 
   .pay-box{margin:14px -22px -20px;padding:16px 22px 18px;border-top:1px solid var(--border);background:#f5f8fd;display:flex;flex-direction:column;gap:8px}
   .pay-box .pay-heading{font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--navy);font-weight:800;margin-bottom:2px}
@@ -113,6 +112,7 @@
   .debtor-bar-track{flex:1 1 auto;height:20px;background:var(--navy-tint);border-radius:5px;overflow:hidden;min-width:0}
   .debtor-bar-fill{height:100%;border-radius:5px}
   .debtor-bar-sum{width:70px;flex:0 0 auto;text-align:right;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
+  .debtor-bar-footnote{font-size:11.5px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;margin-top:2px}
 
   .journal-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
   .journal-row:last-child{border-bottom:none}
@@ -120,6 +120,7 @@
   .j-date{color:var(--muted);font-size:11px;display:block;margin-top:1px}
   .j-amt{flex:0 0 auto;white-space:nowrap;text-align:right}
   .j-amt.inc{color:var(--green);font-weight:800} .j-amt.exp{color:var(--red);font-weight:800}
+  .dual{font-size:.68em;color:var(--muted);font-weight:600;margin-left:4px}
 
   .jgroup{border-bottom:1px solid var(--border)}
   .jgroup:last-child{border-bottom:none}
@@ -133,6 +134,7 @@
   .jgroup-item{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:12px;border-top:1px dashed var(--border)}
   .jgroup-item-main{flex:1 1 auto;min-width:0;font-weight:600;color:var(--text)}
   .jgroup-item-detail{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:1px}
+  .jtag{display:inline-block;font-size:10px;font-weight:700;color:var(--teal-deep);background:var(--teal-tint);border-radius:10px;padding:2px 8px;margin-right:6px;white-space:nowrap}
 
   .report-list{display:flex;flex-direction:column;gap:8px}
   .report-list .journal-row{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:13px 14px;border-bottom:none;box-shadow:0 2px 8px rgba(25,33,102,0.04)}
@@ -165,6 +167,7 @@
   }
 
   .admin-toggle{width:100%;margin-bottom:22px;background:var(--grad-primary);color:#fff;border:none;border-radius:10px;padding:14px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
+
   #adminView{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:22px}
   .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px}
   .admin-header h3{font-family:'Lora',serif;font-size:19px;color:var(--navy);font-weight:700}
@@ -207,7 +210,7 @@
 
   .signal-form{display:flex;flex-direction:column;gap:8px}
   .signal-form-row{display:flex;gap:8px}
-  .signal-form input[type=text]{width:auto;max-width:45%;flex:0 1 120px;min-width:74px;min-height:46px;border:1.5px solid var(--border);border-radius:11px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);outline:none;text-align:center;text-overflow:ellipsis}
+  .signal-form input[type=text]{width:74px;flex:0 0 auto;min-height:46px;border:1.5px solid var(--border);border-radius:11px;padding:0 12px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);outline:none;text-align:center}
   .signal-form select{flex:1 1 auto;min-width:0;min-height:46px;border:1.5px solid var(--border);border-radius:11px;padding:0 10px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
   .signal-form textarea{width:100%;border:1.5px solid var(--border);border-radius:11px;padding:11px 12px;font-family:'Nunito Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);resize:vertical;min-height:84px;outline:none}
   .signal-form textarea:focus, .signal-form select:focus, .signal-form input:focus{border-color:var(--teal-deep);box-shadow:0 0 0 3px var(--teal-tint)}
@@ -227,12 +230,14 @@
   .proto-row{display:none}
   .proto-row.show{display:block}
 
-  /* Менюто е прозрачно в покой; фонът с размазване се включва само докато е залепено най-горе (.stuck). */
+  /* Менюто е напълно прозрачно в покой (няма видим "правоъгълник" върху фона); фонът с размазване се
+     включва САМО докато е залепено най-горе и съдържанието минава отдолу (клас .stuck, виж scroll слушателя). */
   .portal-nav{position:sticky;top:0;z-index:20;margin:0 -18px 18px;padding:12px 18px 10px;background:transparent;transition:background .2s ease, box-shadow .2s ease;}
   .portal-nav.stuck{background:rgba(238,242,248,0.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 1px 0 rgba(25,33,102,0.06);}
   .portal-nav-inner{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .portal-nav-inner::-webkit-scrollbar{display:none}
   .nav-pill{flex:0 0 auto;min-height:36px;display:inline-flex;align-items:center;padding:0 13px;border-radius:999px;background:var(--surface);color:var(--navy);font-size:12.5px;font-weight:700;text-decoration:none;border:1px solid var(--border);white-space:nowrap}
+  .nav-pill.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 
   .quorum-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:0 2px 10px rgba(25,33,102,0.05);text-align:center;margin-bottom:14px}
   .quorum-pct{font-family:'Lora',serif;font-weight:800;font-size:38px;color:var(--navy);line-height:1}
@@ -246,12 +251,11 @@
   .quorum-bar-marker::after{content:attr(data-label);position:absolute;top:25px;left:50%;transform:translateX(-50%);font-size:9.5px;color:var(--muted);font-weight:700;white-space:nowrap}
   .quorum-note{font-size:11.5px;color:var(--muted);margin-top:24px;line-height:1.5;text-align:left}
   .quorum-count{font-size:12px;color:var(--muted);margin-top:10px;font-weight:700}
-  .quorum-missing{font-size:12px;color:#8a5205;background:var(--amber-tint);border:1px solid rgba(217,119,6,.3);border-radius:10px;padding:10px 12px;margin-bottom:12px;line-height:1.5}
   .quorum-list{display:flex;flex-direction:column;max-height:440px;overflow-y:auto;border:1px solid var(--border);border-radius:11px;-webkit-overflow-scrolling:touch}
   .quorum-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer}
   .quorum-row:last-child{border-bottom:none}
   .quorum-row input[type=checkbox]{width:20px;height:20px;flex:0 0 auto;accent-color:var(--navy)}
-  .quorum-row .qr-unit{font-weight:800;color:var(--navy);min-width:56px;flex:0 0 auto}
+  .quorum-row .qr-unit{font-weight:800;color:var(--navy);min-width:48px;flex:0 0 auto}
   .quorum-row .qr-owner{flex:1 1 auto;min-width:0;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px}
   .quorum-row .qr-share{flex:0 0 auto;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;font-size:12.5px}
   .quorum-row.checked{background:var(--green-tint)}
@@ -261,7 +265,7 @@
 
   @media print{
     body::before, body::after{display:none}
-    .brand, .install-banner, .admin-toggle, .admin-close, .print-btn, .unit-card, .stat-strip, .runway-box, .export-btn, .section:not(#printSection), .logout, .foot, .portal-nav{display:none !important}
+    .demo-banner, .brand, .install-banner, .admin-toggle, .admin-close, .print-btn, .unit-card, .stat-strip, .runway-box, .export-btn, .section:not(#printSection), .logout, .foot, .portal-nav{display:none !important}
     #printSection{display:block !important}
     .wrap{max-width:100%;padding:0}
     #adminView{border:none;box-shadow:none;padding:0}
@@ -271,7 +275,7 @@
 <body>
 <div class="wrap">
   <div class="brand">
-    <h1>Вход Б<em>Grand Azurro</em></h1>
+    <h1>Вход А<em>Grand Azurro</em></h1>
     <span>Портал за собственици</span>
   </div>
 
@@ -284,7 +288,7 @@
   </div>
 
   <div id="gate" class="gate">
-    <p>Въведи персоналния си код за достъп, за да видиш салдото и таксите на своя имот (апартамент или магазин).</p>
+    <p>Въведи персоналния си код за достъп, за да видиш салдото и таксите на своя апартамент.</p>
     <div class="code-row">
       <input id="code" maxlength="6" placeholder="КОД" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" inputmode="text">
       <button id="enter" onclick="checkCode()">Влез</button>
@@ -293,27 +297,31 @@
   </div>
 
   <div id="result" class="hidden"></div>
-  <div class="foot">Данните не са в реално време — обновяват се веднъж месечно. В началото на всеки месец нанасяме плащанията от предходния, обичайно до 10-о число. Затова е нормално скорошен превод все още да не личи тук — ще е отразен при следващото обновяване.</div>
+  <div class="foot">Данните не са в реално време — обновяват се веднъж месечно. В началото на всеки месец нанасям плащанията от предходния, обичайно до 10-о число. Затова е нормално скорошен превод все още да не личи тук — ще е отразен при следващото обновяване.</div>
 </div>
 
 <script>
-// ⚠️ Постави тук .../exec линка от Apps Script деплоя на Вход Б.
-var SCRIPT_URL = "PASTE_YOUR_DEPLOYED_WEB_APP_URL_HERE";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9hMZpDQ-PLtV0KfdftacqZR3AB3KusVmlIqdKA2q5qgxOg5qm9GFKVslpa-lPmQGzhA/exec";
 
-// Таб "Архив" (протоколи от общи събрания) — скрит, докато не се нанесат протоколите.
-// За да се покаже: смени на true (както при Вход А).
+// Таб "Архив" (протоколи от общи събрания) — временно скрит, докато не се нанесат протоколите.
+// За да се покаже отново: смени на true и Deploy → New version → Deploy.
 var SHOW_PROTOCOLS = false;
 
 function fmt(n){ return (Number(n)||0).toLocaleString('bg-BG',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+// За суми ~0 показва тире вместо подвеждащо "-0,00 €" / "+0,00 €" (изглежда все едно нищо не е въведено, не че наистина е нула).
+function fmtOrDash(n, title){
+  var v = Number(n) || 0;
+  if (Math.abs(v) < 0.005) return '<span title="' + escapeHtml(title || 'Няма въведени данни') + '">—</span>';
+  return fmt(v);
+}
 if (window.ChartDataLabels) { Chart.register(ChartDataLabels); }
 function monthLabel(key){
   var parts = key.split('-'); var names=['Яну','Фев','Мар','Апр','Май','Юни','Юли','Авг','Сеп','Окт','Ное','Дек'];
   return names[Number(parts[1])-1] + " '" + parts[0].slice(2);
 }
-// Кратко име на обект за графики/полета: "Апартамент Б12" -> "Б12", "Магазин Б3" -> "маг. Б3"
-function shortUnit(u){
-  return String(u || '').replace(/^Апартаменти?\s*/i, '').replace(/^Магазини?\s*/i, 'маг. ');
-}
+// Бекендът връща датите на журналните записи като текст "ДД.ММ.ГГГГ" (клетките в БЮДЖЕТ са текстови,
+// не истински Date) — native new Date("28.08.2026") НЕ го парсва (връща Invalid Date), затова първо
+// пробваме ръчно това конкретно текстово изписване, преди да опитаме стандартния парсър.
 function parseFlexDate_(v){
   if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
   var s = String(v || '').trim();
@@ -343,10 +351,18 @@ function copyText_(text, msgId){
   if (!text) return;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(shown).catch(function(){ fallbackCopy_(text, shown); });
-  } else { fallbackCopy_(text, shown); }
+  } else {
+    fallbackCopy_(text, shown);
+  }
 }
-function copyIban(){ var el = document.getElementById('payIban'); copyText_(el ? el.textContent.trim() : '', 'payCopied'); }
-function copyRef(){ var el = document.getElementById('payRef'); copyText_(el ? el.textContent.trim() : '', 'payRefCopied'); }
+function copyIban(){
+  var el = document.getElementById('payIban');
+  copyText_(el ? el.textContent.trim() : '', 'payCopied');
+}
+function copyRef(){
+  var el = document.getElementById('payRef');
+  copyText_(el ? el.textContent.trim() : '', 'payRefCopied');
+}
 function fallbackCopy_(text, cb){
   var ta = document.createElement('textarea');
   ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
@@ -356,6 +372,10 @@ function fallbackCopy_(text, cb){
   if (cb) cb();
 }
 
+// Групира "Последни разходи": (1) по общ таг в началото на бележката, напр. "[Отчет апр-юни 2023] ...",
+// или (2) — когато няма такъв таг — по КАЛЕНДАРЕН МЕСЕЦ: всички редове от един и същ месец (независимо
+// от точния ден) автоматично се сгъват в една карта, без да е нужно ръчно таговане.
+// Единичен ред за даден месец си остава обикновен ред, както досега.
 function shortDetail_(note){
   var s = String(note || '');
   var idx = s.lastIndexOf(' — ');
@@ -366,17 +386,19 @@ function monthKeyFromDate_(v){
   if (!d) return String(v || '');
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
 }
-var MONTHS_LONG = ['януари','февруари','март','април','май','юни','юли','август','септември','октомври','ноември','декември'];
 function monthNameLong_(key){
   var parts = String(key).split('-');
-  var name = MONTHS_LONG[Number(parts[1]) - 1];
+  var names = ['януари','февруари','март','април','май','юни','юли','август','септември','октомври','ноември','декември'];
+  var name = names[Number(parts[1]) - 1];
   return name ? (name + ' ' + parts[0]) : String(key);
 }
 function monthNameOnly_(key){
   var parts = String(key).split('-');
-  return MONTHS_LONG[Number(parts[1]) - 1] || String(key);
+  var names = ['януари','февруари','март','април','май','юни','юли','август','септември','октомври','ноември','декември'];
+  return names[Number(parts[1]) - 1] || String(key);
 }
-// "Основание за превода" — обектът(ите) + период. Съдържа "Б", защото сметката е обща с Вход А и Сутерен.
+// Изгражда "Основание за превода" с изричен период, вместо само номера на апартамента —
+// напр. "Апартамент А10 — такси за периода януари - юни 2025" (или само един месец, ако е един).
 function buildPayRef_(unit, fromKey, toKey){
   if (!fromKey || !toKey) return unit + ' — такса поддръжка';
   if (fromKey === toKey) return unit + ' — такса за ' + monthNameLong_(fromKey);
@@ -384,6 +406,9 @@ function buildPayRef_(unit, fromKey, toKey){
   var fromLabel = sameYear ? monthNameOnly_(fromKey) : monthNameLong_(fromKey);
   return unit + ' — такси за периода ' + fromLabel + ' - ' + monthNameLong_(toKey);
 }
+// Групира д.recentJournal по МЕСЕЦ — последните 12 (вкл. текущия), най-новият първи.
+// Всеки месец се показва като дропдаун, ДОРИ да няма нито един запис за него (с "Няма разходи"),
+// за да изглежда като пълен годишен таймлайн (Януари, Февруари, ... а не само месеците с данни).
 function groupJournalByMonth_(entries){
   var byMonth = {};
   (entries || []).forEach(function(j){
@@ -395,6 +420,8 @@ function groupJournalByMonth_(entries){
     byMonth[mKey].total += j.amount;
   });
   Object.keys(byMonth).forEach(function(k){
+    // Сравняваме по РЕАЛНО парснати дати (не като текст) — "ДД.ММ.ГГГГ" низове НЕ се подреждат
+    // правилно лексикографски (напр. "15.03.2026" би излязло преди "22.01.2026" по букви).
     byMonth[k].items.sort(function(a, b){
       var da = parseFlexDate_(a.date), db = parseFlexDate_(b.date);
       return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
@@ -435,7 +462,7 @@ function drawAdminChart(d){
   var box = document.getElementById('allDebtorsBox');
   if (window.__adminChart) { window.__adminChart.destroy(); window.__adminChart = null; }
   if (!list.length) {
-    box.innerHTML = '<div class="chart-note" style="padding:30px 0">Няма обекти със задължения към момента. 🎉</div>';
+    box.innerHTML = '<div class="chart-note" style="padding:30px 0">Няма апартаменти със задължения към момента. 🎉</div>';
     return;
   }
   box.innerHTML = '<canvas id="allDebtorsChart"></canvas>';
@@ -445,11 +472,13 @@ function drawAdminChart(d){
   window.__adminChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: list.map(function(x){ return shortUnit(x.unit); }),
+      labels: list.map(function(x){ return x.unit.replace('Апартамент ',''); }),
       datasets: [{ label: 'Дължимо', data: list.map(function(x){ return x.due; }), backgroundColor: '#d97706', borderRadius: 4 }]
     },
     options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
       layout: { padding: { right: 55 } },
       plugins: {
         legend: { display: false },
@@ -473,10 +502,6 @@ var IS_DEMO_MODE = SCRIPT_URL.indexOf('PASTE_YOUR') !== -1;
 async function loadStatus(code, silent){
   var errEl = document.getElementById('err');
   if (!silent) errEl.style.display = 'none';
-  if (IS_DEMO_MODE) {
-    if (!silent) { errEl.textContent = 'Порталът още не е свързан (липсва SCRIPT_URL).'; errEl.style.display = 'block'; }
-    return false;
-  }
   try {
     var res = await fetch(SCRIPT_URL + '?action=getStatus&code=' + encodeURIComponent(code));
     var data = await res.json();
@@ -505,12 +530,16 @@ async function checkCode(){
   btn.disabled = false; btn.textContent = 'Влез';
 }
 
+// ---- Сигнали ----
 async function submitSignal(){
   var textEl = document.getElementById('signalText');
   var catEl = document.getElementById('signalCategory');
   var msgEl = document.getElementById('signalMsg');
   var text = textEl.value.trim();
-  if (!text) { msgEl.className = 'signal-msg error'; msgEl.textContent = 'Моля, опиши проблема.'; msgEl.style.display = 'block'; return; }
+  if (!text) {
+    msgEl.className = 'signal-msg error'; msgEl.textContent = 'Моля, опиши проблема.'; msgEl.style.display = 'block';
+    return;
+  }
   try {
     var res = await fetch(SCRIPT_URL + '?action=submitSignal&code=' + encodeURIComponent(window.__activeCode) + '&text=' + encodeURIComponent(text) + '&category=' + encodeURIComponent(catEl.value));
     var data = await res.json();
@@ -535,7 +564,11 @@ async function resolveSignal(id){
   } catch (e) { alert('Грешка при връзка.'); }
 }
 
-function toCsvValue_(v){ var s = String(v == null ? '' : v).replace(/"/g, '""'); return '"' + s + '"'; }
+// ---- Export CSV (само админ) ----
+function toCsvValue_(v){
+  var s = String(v == null ? '' : v).replace(/"/g, '""');
+  return '"' + s + '"';
+}
 function downloadCsv_(filename, rows){
   var csv = rows.map(function(r){ return r.map(toCsvValue_).join(','); }).join('\r\n');
   var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -550,14 +583,14 @@ async function exportCsv(){
     var res = await fetch(SCRIPT_URL + '?action=exportData&code=' + encodeURIComponent(window.__activeCode));
     var data = await res.json();
     if (!data.ok) { alert(data.error || 'Грешка при износ.'); return; }
-    var payRows = [['Дата','Обект','Сума','Валута','Начин','Бележка']].concat(
+    var payRows = [['Дата','Апартамент','Сума','Валута','Начин','Бележка']].concat(
       (data.payments||[]).map(function(p){ return [formatDateShort(p.date), p.unit, p.amount, p.currency, p.method, p.note]; })
     );
-    downloadCsv_('vhodB_plashtania_' + todayStr_() + '.csv', payRows);
+    downloadCsv_('plashtania_' + todayStr_() + '.csv', payRows);
     var budRows = [['Дата','Тип','Категория','Сума','Валута','Бележка']].concat(
       (data.budget||[]).map(function(b){ return [formatDateShort(b.date), b.type, b.category, b.amount, b.currency, b.note]; })
     );
-    downloadCsv_('vhodB_byudzhet_' + todayStr_() + '.csv', budRows);
+    downloadCsv_('byudzhet_' + todayStr_() + '.csv', budRows);
   } catch (e) { alert('Грешка при връзка.'); }
 }
 function todayStr_(){
@@ -565,38 +598,12 @@ function todayStr_(){
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
-var __sessionTimer = null;
-function resetSessionTimer(){
-  if (__sessionTimer) clearTimeout(__sessionTimer);
-  // Касиер/Домоуправител — без авто-изход (порталът стои отворен по време на събрание за кворума).
-  if (window.__lastData && window.__lastData.isAdmin) return;
-  __sessionTimer = setTimeout(function(){
-    if (!document.getElementById('result').classList.contains('hidden')) {
-      alert('Сесията изтече поради неактивност. Ще влезеш отново с кода си.');
-      location.reload();
-    }
-  }, 10 * 60 * 1000);
-}
-['click','keydown','touchstart','scroll'].forEach(function(evt){
-  document.addEventListener(evt, function(){
-    if (!document.getElementById('result').classList.contains('hidden')) resetSessionTimer();
-  }, { passive: true });
-});
-
-// ---- Кворум на ОС (само Касиер/Домоуправител) — смята се изцяло в браузъра ----
-// Отметка на един обект отмята автоматично и останалите обекти на СЪЩИЯ собственик (един човек
-// гласува с всичките си идеални части). Може да се коригира ръчно след това.
+// ---- Кворум на ОС (само Касиер/Домоуправител) ----
+// Сумата се смята изцяло в браузъра (данните за дяловете вече са в d.quorumRoster от getStatus) —
+// нарочно без заявки към сървъра при всяко отмятане, за да работи плавно дори при нестабилна връзка
+// по време на самото събрание.
 function recomputeQuorum(checkbox){
   if (checkbox) {
-    var owner = checkbox.getAttribute('data-owner');
-    if (owner) {
-      document.querySelectorAll('#quorumList input[type=checkbox]').forEach(function(b){
-        if (b !== checkbox && b.getAttribute('data-owner') === owner) {
-          b.checked = checkbox.checked;
-          var r2 = b.closest('.quorum-row'); if (r2) r2.classList.toggle('checked', b.checked);
-        }
-      });
-    }
     var row = checkbox.closest('.quorum-row');
     if (row) row.classList.toggle('checked', checkbox.checked);
   }
@@ -623,18 +630,16 @@ function recomputeQuorum(checkbox){
   var countEl = document.getElementById('quorumCount');
   if (countEl) {
     var totalShare = window.__lastData && window.__lastData.totalIdealShare;
-    countEl.textContent = checkedCount + ' от ' + boxes.length + ' обекта отметнати'
-      + (totalShare ? ' · общо идеални части във входа: ' + Number(totalShare).toFixed(2) + '%' : '');
+    countEl.textContent = checkedCount + ' от ' + boxes.length + ' апартамента отметнати'
+      + (totalShare ? ' · общо идеални части в сградата: ' + Number(totalShare).toFixed(2) + '%' : '');
   }
 }
 function resetQuorum(){
-  document.querySelectorAll('#quorumList input[type=checkbox]').forEach(function(b){
-    b.checked = false; var r = b.closest('.quorum-row'); if (r) r.classList.remove('checked');
-  });
+  document.querySelectorAll('#quorumList input[type=checkbox]').forEach(function(b){ b.checked = false; });
   recomputeQuorum(null);
 }
 
-// ---- Меню: фон (.stuck) само когато е реално залепено най-горе ----
+// ---- Меню: включва фона (.stuck) само когато е реално залепено най-горе ----
 function updateNavStuck_(){
   var n = document.querySelector('.portal-nav');
   if (!n) return;
@@ -643,11 +648,31 @@ function updateNavStuck_(){
 window.addEventListener('scroll', updateNavStuck_, { passive: true });
 window.addEventListener('resize', updateNavStuck_);
 
-function escapeHtml(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// ---- Session timeout (10 мин бездействие) — НЕ важи за Касиер/Домоуправител: по време на
+// събрание порталът трябва да стои отворен за записване на присъствие/кворум произволно дълго,
+// докато не бъде затворен ръчно с "Изход". За обикновен собственик поведението е както досега.
+var __sessionTimer = null;
+function resetSessionTimer(){
+  if (__sessionTimer) clearTimeout(__sessionTimer);
+  if (window.__lastData && window.__lastData.isAdmin) return;
+  __sessionTimer = setTimeout(function(){
+    if (!document.getElementById('result').classList.contains('hidden')) {
+      alert('Сесията изтече поради неактивност. Ще влезеш отново с кода си.');
+      location.reload();
+    }
+  }, 10 * 60 * 1000);
+}
+['click','keydown','touchstart','scroll'].forEach(function(evt){
+  document.addEventListener(evt, function(){
+    if (!document.getElementById('result').classList.contains('hidden')) resetSessionTimer();
+  }, { passive: true });
+});
+
+function escapeHtml(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function buildPortalNavHtml_(isAdmin){
   return '<div class="portal-nav"><div class="portal-nav-inner">'
-    + '<a href="#imot" class="nav-pill">Моят имот</a>'
+    + '<a href="#apartament" class="nav-pill">Моят апартамент</a>'
     + '<a href="#finansi" class="nav-pill">Финанси</a>'
     + (SHOW_PROTOCOLS ? '<a href="#arhiv" class="nav-pill">Архив</a>' : '')
     + '<a href="#pomosht" class="nav-pill">Помощ</a>'
@@ -659,16 +684,34 @@ function render(d){
   window.__lastData = d;
   var due = Number(d.due) || 0;
   var totals = d.buildingTotals || {};
-  var multi = d.units && d.units.length > 1;
 
-  function subHtml(fro, tup){
-    // ФРО = Фонд ремонт и обновяване; ФУП = Фонд управление и поддръжка (етикет като при Вход А, 07.10.2026).
-    return '<div class="b-sub"><div>ФРО: <b>' + fmt(fro || 0) + '</b></div><div>ФУП: <b>' + fmt(tup || 0) + '</b></div></div>';
+  // Законова разбивка на СЪБРАНИТЕ такси: ФРО (Фонд Ремонт и Обновяване) vs. ФУП (Фонд Управление
+  // и Поддръжка) — показва се с по-ситен шрифт под общата сума на "Приходи". Обхваща само таксите
+  // от апартаментите (не и евентуални извънредни приходи), затова двете суми под линийката могат
+  // да излязат по-малко от общите "Приходи" отгоре — това е очаквано, не грешка.
+  // (07.10.2026: етикетът е преименуван от "ТУП" на "ФУП" по искане на Мишо — стойността
+  // зад него (d.maintenance*) е СЪЩАТА като преди и винаги, само надписът се смени, за яснота.)
+  var froSubHtml = '';
+  if (d.froCollected != null || d.maintenanceCollected != null) {
+    froSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froCollected || 0) + '</b></div>'
+      + '<div>ФУП: <b>' + fmt(d.maintenanceCollected || 0) + '</b></div></div>';
+  }
+  // Същата разбивка и за Разходи (по категория, чрез листа ПЕРА в бекенда) и за Каса
+  // (Каса по перо = събрано минус изразходвано за него) — виж бележките в Code.gs.
+  var froExpSubHtml = '';
+  if (d.froExpense != null || d.maintenanceExpense != null) {
+    froExpSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froExpense || 0) + '</b></div>'
+      + '<div>ФУП: <b>' + fmt(d.maintenanceExpense || 0) + '</b></div></div>';
+  }
+  var froBalSubHtml = '';
+  if (d.froBalance != null || d.maintenanceBalance != null) {
+    froBalSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froBalance || 0) + '</b></div>'
+      + '<div>ФУП: <b>' + fmt(d.maintenanceBalance || 0) + '</b></div></div>';
   }
   var budgetHtml = '<div class="budget-grid">'
-    + '<div class="budget-card"><div class="b-label">Приходи</div><div class="b-val inc">' + fmt(totals.income) + '</div>' + subHtml(d.froCollected, d.maintenanceCollected) + '</div>'
-    + '<div class="budget-card"><div class="b-label">Разходи</div><div class="b-val exp">' + fmt(totals.expense) + '</div>' + subHtml(d.froExpense, d.maintenanceExpense) + '</div>'
-    + '<div class="budget-card"><div class="b-label">Каса</div><div class="b-val bal">' + fmt(totals.balance) + '</div>' + subHtml(d.froBalance, d.maintenanceBalance) + '</div>'
+    + '<div class="budget-card"><div class="b-label">Приходи</div><div class="b-val inc">' + fmt(totals.income) + '</div>' + froSubHtml + '</div>'
+    + '<div class="budget-card"><div class="b-label">Разходи</div><div class="b-val exp">' + fmt(totals.expense) + '</div>' + froExpSubHtml + '</div>'
+    + '<div class="budget-card"><div class="b-label">Каса</div><div class="b-val bal">' + fmt(totals.balance) + '</div>' + froBalSubHtml + '</div>'
     + '</div>';
 
   var yearly = yearlyFromTrend(d.budgetTrend);
@@ -677,10 +720,11 @@ function render(d){
       ? '<div class="yearly-exp missing">няма<br>въведени</div>'
       : '<div class="yearly-exp">-' + fmt(y.expense) + '</div>';
     return '<div class="yearly-row"><div class="yearly-year">' + y.year + '</div>'
-      + '<div class="yearly-inc">+' + fmt(y.income) + '</div>' + expCell + '</div>';
+      + '<div class="yearly-inc">+' + fmt(y.income) + '</div>'
+      + expCell + '</div>';
   }).join('');
   var yearlyHtml = yearly.length
-    ? '<div class="yearly-card">' + yearlyRowsHtml + '<div class="yearly-note">„Няма въведени разходи" значи, че отчетът за годината още не е нанесен — не че входът не е харчил. Таксите до 2026 г. са нанесени обобщено по отчет, затова разпределението им по години е приблизително.</div></div>'
+    ? '<div class="yearly-card">' + yearlyRowsHtml + '<div class="yearly-note">„Няма въведени разходи" значи, че отчетът за годината още не е нанесен — не че входът не е харчил.</div></div>'
     : '<div style="color:var(--muted);font-size:13px">Няма данни за нито една година.</div>';
 
   var journalGroups = groupJournalByMonth_(d.recentJournal);
@@ -693,7 +737,7 @@ function render(d){
         + '<div class="jgroup-sub"><div class="jgroup-item" style="color:var(--muted);font-size:13px;padding:9px 0">Няма въведени разходи за този месец.</div></div></details>';
     }
     var groupMeta = g.items.length + (g.items.length === 1 ? ' запис' : ' записа');
-    var sub = g.items.map(function(it){
+    var subHtml = g.items.map(function(it){
       var shortD = shortDetail_(it.detail);
       return '<div class="jgroup-item"><div class="jgroup-item-main">' + escapeHtml(it.category)
         + (shortD ? '<span class="jgroup-item-detail">' + escapeHtml(shortD) + '</span>' : '') + '</div>'
@@ -701,7 +745,7 @@ function render(d){
     }).join('');
     return '<details class="jgroup"><summary><div class="j-left">' + escapeHtml(monthTitle) + '<span class="j-date">' + groupMeta + '</span></div>'
       + '<div style="display:flex;align-items:center;gap:8px"><span class="j-amt exp">-' + fmt(g.total) + '</span><span class="jarrow">▾</span></div></summary>'
-      + '<div class="jgroup-sub">' + sub + '</div></details>';
+      + '<div class="jgroup-sub">' + subHtml + '</div></details>';
   }).join('');
 
   var protoYears = Array.from(new Set((d.protocols || []).map(function(p){ var dt = parseFlexDate_(p.date); return dt ? dt.getFullYear() : null; }).filter(Boolean))).sort().reverse();
@@ -710,10 +754,11 @@ function render(d){
       + protoYears.map(function(y){ return '<button class="proto-chip" onclick="filterProtocols(this,\'' + y + '\')">' + y + '</button>'; }).join('')
       + '</div>'
     : '';
+  var protoTypeClassMap = { 'Редовно': 'regular', 'Извънредно': 'extra' };
   var protocolsHtml = (d.protocols || []).map(function(p){
     var linkHtml = (p.link && /^https?:\/\//.test(p.link)) ? ' · <a href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener" style="color:var(--teal-deep);font-weight:700">Свали протокол ↗</a>' : '';
     var dt = parseFlexDate_(p.date); var yr = dt ? dt.getFullYear() : '';
-    var typeCls = /извънредно/i.test(String(p.type || '')) ? 'extra' : 'regular';
+    var typeCls = protoTypeClassMap[p.type] || 'regular';
     return '<div class="journal-row proto-row show" data-year="' + yr + '" style="align-items:flex-start"><div class="j-left"><strong>' + escapeHtml(p.topics) + '</strong>'
       + '<span class="j-date">' + escapeHtml(formatDateShort(p.date)) + '<span class="proto-type-chip ' + typeCls + '">' + escapeHtml(p.type) + '</span>' + linkHtml + '</span>'
       + '<div style="font-size:12px;color:var(--muted);margin-top:4px">' + escapeHtml(p.decisions) + '</div></div></div>';
@@ -723,16 +768,16 @@ function render(d){
     : '<div style="color:var(--muted);font-size:13px">Няма качени протоколи все още.</div>');
 
   var s = d.stats || {};
-  var statStripHtml = !d.hasUnits ? '' : '<div class="stat-strip">'
+  var statStripHtml = '<div class="stat-strip">'
     + '<div class="stat-chip' + (s.paidThisMonth === 0 ? ' warn' : '') + '">'
       + '<div class="stat-num">' + (s.paidThisMonth||0) + ' <span style="font-size:13px;color:var(--muted);font-weight:500">от ' + (s.totalUnits||0) + '</span></div>'
-      + '<div class="stat-label">обекта с плащане този месец</div>'
-      + '<div class="stat-info">Без имена — само по номер на обект.</div>'
+      + '<div class="stat-label">платени такси този месец</div>'
+      + '<div class="stat-info">Без имена — само по номер на апартамент.</div>'
       + '</div>'
     + '<div class="stat-chip' + (s.overdueMonths > 0 ? ' warn' : '') + '">'
       + '<div class="stat-num">' + (s.overdueMonths||0) + ' <span style="font-size:13px;color:var(--muted);font-weight:500">от ' + (s.monthsSinceStart||0) + '</span></div>'
       + '<div class="stat-label">твои неплатени месеца</div>'
-      + '<div class="stat-info">Второто число е откога дължиш такса.</div>'
+      + '<div class="stat-info">Второто число е откога си собственик.</div>'
       + '</div>'
     + '<div class="stat-chip full' + (due > 0 ? ' warn' : '') + '">'
       + '<div class="stat-num">' + fmt(s.yearEndProjection) + '</div>'
@@ -745,8 +790,9 @@ function render(d){
     if (d.cashRunway.stable) {
       runwayHtml = '<div class="runway-box ok"><span class="dot"></span><span>Финансите на входа са стабилни при текущия темп на разходи (последни 3 месеца).</span></div>';
     } else {
-      var rdText = new Date(d.cashRunway.date).toLocaleDateString('bg-BG', {month:'long', year:'numeric'});
-      runwayHtml = '<div class="runway-box danger"><span class="dot"></span><span>При текущия темп на разходи и просрочия, касата на входа ще се изпразни до <strong>' + rdText + '</strong> (~' + d.cashRunway.months + ' месеца). Само за касиер/домоуправител — не се показва на собствениците.</span></div>';
+      var rd = new Date(d.cashRunway.date);
+      var rdText = rd.toLocaleDateString('bg-BG', {month:'long', year:'numeric'});
+      runwayHtml = '<div class="runway-box danger"><span class="dot"></span><span>При текущия темп на разходи и просрочия, касата на входа ще се изпразни до <strong>' + rdText + '</strong> (~' + d.cashRunway.months + ' месеца). Само за твоя/домоуправителска информация — не се показва на собствениците.</span></div>';
     }
   }
 
@@ -759,22 +805,22 @@ function render(d){
 
   var statusClassMap = { "Нов": "new", "В процес": "progress", "Решен": "done" };
   var signalStatusLabelMap = { "Нов": "Нов", "В процес": "В работа", "Решен": "Решен" };
-  var signalsListHtml = (d.signals || []).map(function(sg){
-    var cls = statusClassMap[sg.status] || 'new';
-    var resolveBtn = (d.isAdmin && sg.status !== 'Решен') ? '<button class="signal-resolve" onclick="resolveSignal(\'' + escapeHtml(sg.id) + '\')">Маркирай решен</button>' : '';
+  var signalsListHtml = (d.signals || []).map(function(s){
+    var cls = statusClassMap[s.status] || 'new';
+    var resolveBtn = (d.isAdmin && s.status !== 'Решен') ? '<button class="signal-resolve" onclick="resolveSignal(\'' + s.id + '\')">Маркирай решен</button>' : '';
     return '<div class="signal-row">'
-      + '<span class="signal-status ' + cls + '">' + escapeHtml(signalStatusLabelMap[sg.status] || sg.status) + '</span>'
-      + '<div style="flex:1;min-width:0"><div class="signal-text">' + escapeHtml(sg.text) + '</div>'
-      + '<div class="signal-meta">' + escapeHtml(formatDateShort(sg.date)) + ' · подаден от ' + escapeHtml(sg.unit) + '</div>'
-      + (sg.note ? '<div class="signal-note">↳ ' + escapeHtml(sg.note) + '</div>' : '')
+      + '<span class="signal-status ' + cls + '">' + escapeHtml(signalStatusLabelMap[s.status] || s.status) + '</span>'
+      + '<div style="flex:1;min-width:0"><div class="signal-text">' + escapeHtml(s.text) + '</div>'
+      + '<div class="signal-meta">' + escapeHtml(formatDateShort(s.date)) + ' · подаден от ' + escapeHtml(s.unit) + '</div>'
+      + (s.note ? '<div class="signal-note">↳ ' + escapeHtml(s.note) + '</div>' : '')
       + resolveBtn + '</div></div>';
   }).join('');
   var signalsListWrapHtml = signalsListHtml ? '<div class="signal-list">' + signalsListHtml + '</div>' : '';
 
-  var ownUnitNo = shortUnit(d.unit);
+  var ownUnitNo = String(d.unit || '').replace(/^Апартамент\s*/i, '');
   var signalFormHtml = '<div class="signal-form">'
     + '<div class="signal-form-row">'
-    + '<input type="text" value="' + escapeHtml(ownUnitNo) + '" readonly title="' + escapeHtml(d.unit) + '">'
+    + '<input type="text" value="' + escapeHtml(ownUnitNo) + '" readonly title="Апартамент (от твоя код за достъп)">'
     + '<select id="signalCategory"><option value="Авария">Авария</option><option value="Осветление">Осветление</option><option value="Асансьор">Асансьор</option><option value="Чистота">Чистота</option><option value="Друго">Друго</option></select>'
     + '</div>'
     + '<textarea id="signalText" placeholder="Опиши накратко проблема (напр. изгоряла крушка на етаж 3)"></textarea>'
@@ -786,16 +832,6 @@ function render(d){
   var lastUpdatedText = d.lastUpdated ? formatDateShort(d.lastUpdated) : null;
   var updatedBadgeHtml = lastUpdatedText ? '<div class="updated-badge"><span class="dot"></span>Обновено ' + escapeHtml(lastUpdatedText) + '</div>' : '<span></span>';
 
-  // Разбивка по обект, когато един собственик има няколко (един код за всички).
-  var splitHtml = '';
-  if (multi) {
-    splitHtml = '<div class="units-split">' + d.units.map(function(u){
-      return '<div class="units-split-row"><div class="units-split-name">' + escapeHtml(u.unit)
-        + '<span class="units-split-meta">' + fmt(u.fee) + '/мес.' + (u.overdueMonths > 0 ? ' · ' + u.overdueMonths + ' неплатени месеца' : '') + '</span></div>'
-        + '<div class="units-split-amt ' + (u.due > 0.009 ? 'owe' : 'zero') + '">' + (u.due > 0.009 ? fmt(u.due) : 'Платено') + '</div></div>';
-    }).join('') + '</div>';
-  }
-
   var payBoxHtml = '';
   if (due > 0 && d.bankIban && d.bankIban.toUpperCase().indexOf('ПОПЪЛНИ') === -1) {
     var payRef = buildPayRef_(d.unit, d.unpaidFrom, d.unpaidTo);
@@ -806,53 +842,33 @@ function render(d){
       + '<button class="pay-copy alt" onclick="copyRef()">📋 Копирай</button></div>'
       + '<div class="pay-copied" id="payCopied">✅ IBAN копиран</div>'
       + '<div class="pay-copied" id="payRefCopied">✅ Основанието е копирано</div>'
-      + '<div class="pay-note">Плащанията се нанасят веднъж месечно, до 10-о число за предходния месец. Задължително посочвай <strong>Вход Б</strong> и обекта в основанието, както и периода, за който плащаш — сметката е обща за няколко входа.</div>'
+      + '<div class="pay-note">Плащанията се нанасят веднъж месечно, до 10-о число за предходния месец. Задължително посочвай апартамента в основанието, както и периода за който плащаш, за да се разпознае плащането.</div>'
       + '</div>';
   }
 
-  var unitCardHtml;
-  if (d.hasUnits) {
-    unitCardHtml = '<div class="unit-card">'
-      + '<div class="eyebrow-row"><div class="eyebrow">' + (multi ? 'Твоите имоти' : 'Твоят имот') + '</div>' + updatedBadgeHtml + '</div>'
-      + '<h2>' + escapeHtml(d.unit) + '</h2>'
-      + '<div class="due"><div class="due-left"><div class="due-label">Дължимо към момента' + (multi ? ' (общо)' : '') + '</div>'
-      + '<div class="due-meta">' + fmt(d.feePerMonth) + '/мес.' + (!multi && s.overdueMonths > 0 ? ' · ' + s.overdueMonths + ' неплатени месеца' : '') + '</div></div>'
-      + '<div class="due-amt ' + (due > 0 ? 'owe' : 'zero') + '">' + (due > 0 ? fmt(due) : 'Всичко платено') + '</div></div>'
-      + splitHtml
-      + payBoxHtml
-      + '</div>';
-  } else {
-    unitCardHtml = '<div class="unit-card"><div class="eyebrow-row"><div class="eyebrow">Административен достъп</div><span></span></div>'
-      + '<h2>' + escapeHtml(d.role) + ' — Вход Б</h2></div>';
-  }
-
-  // ---- Кворум на ОС — само Касиер/Домоуправител ----
+  // ---- Кворум на ОС — само Касиер/Домоуправител, само ако има качени реални дялове идеални части ----
   var quorumHtml = '';
   if (d.isAdmin && d.quorumRoster && d.quorumRoster.length) {
     var totalShareNum = Number(d.totalIdealShare) || 0;
     var quorumRowsHtml = d.quorumRoster.map(function(u){
       var shareVal = Number(u.idealShare) || 0;
       return '<label class="quorum-row">'
-        + '<input type="checkbox" data-share="' + shareVal + '" data-owner="' + escapeHtml(u.owner || '') + '" onchange="recomputeQuorum(this)">'
-        + '<span class="qr-unit">' + escapeHtml(shortUnit(u.unit)) + '</span>'
+        + '<input type="checkbox" data-share="' + shareVal + '" onchange="recomputeQuorum(this)">'
+        + '<span class="qr-unit">' + escapeHtml(String(u.unit).replace('Апартамент ','')) + '</span>'
         + '<span class="qr-owner">' + escapeHtml(u.owner || '') + '</span>'
         + '<span class="qr-share">' + shareVal.toFixed(2) + '%</span>'
         + '</label>';
     }).join('');
-    var missingHtml = totalShareNum < 0.01
-      ? '<div class="quorum-missing">Дяловете идеални части още не са въведени (колона L „% ид.ч.“ в ДОСТЪП). Отметките работят, но сумата ще е 0% до попълването им.</div>'
-      : '';
     quorumHtml = '<div id="kvorum">'
       + '<div class="section"><div class="section-label">Само за ' + escapeHtml(d.role) + '</div><div class="section-title">Кворум на събранието</div>'
-      + missingHtml
       + '<div class="quorum-summary">'
         + '<div class="quorum-pct" id="quorumPct">0.00%</div>'
         + '<div class="quorum-status bad" id="quorumStatus">❌ Няма кворум</div>'
         + '<div class="quorum-bar-track"><div class="quorum-bar-fill" id="quorumBarFill" style="width:0%"></div>'
           + '<div class="quorum-bar-marker" style="left:33%" data-label="33%"></div>'
           + '<div class="quorum-bar-marker" style="left:67%" data-label="67%"></div></div>'
-        + '<div class="quorum-note"><strong style="color:var(--text)">67%</strong> — редовен кворум по чл. 15, ал. 1 ЗУЕС. <strong style="color:var(--text)">33%</strong> важи само ако събранието вече е процедурно отложено с 1 час по чл. 15, ал. 2. Отметка на един обект отмята автоматично и другите обекти на същия собственик.</div>'
-        + '<div class="quorum-count" id="quorumCount">0 от ' + d.quorumRoster.length + ' обекта отметнати' + (totalShareNum ? ' · общо идеални части във входа: ' + totalShareNum.toFixed(2) + '%' : '') + '</div>'
+        + '<div class="quorum-note"><strong style="color:var(--text)">67%</strong> — редовен кворум по чл. 15, ал. 1 ЗУЕС. <strong style="color:var(--text)">33%</strong> важи само ако събранието вече е процедурно отложено с 1 час по чл. 15, ал. 2 — не отмятай по-малко хора и приемай, че просто е „достатъчно".</div>'
+        + '<div class="quorum-count" id="quorumCount">0 от ' + d.quorumRoster.length + ' апартамента отметнати · общо идеални части в сградата: ' + totalShareNum.toFixed(2) + '%</div>'
         + '</div>'
       + '<div class="chart-card"><div class="quorum-list" id="quorumList">' + quorumRowsHtml + '</div>'
         + '<div class="quorum-actions"><button class="export-btn" onclick="resetQuorum()">↺ Нулирай всички</button></div>'
@@ -861,14 +877,21 @@ function render(d){
   }
 
   document.getElementById('result').innerHTML = buildPortalNavHtml_(d.isAdmin)
-    + '<div id="imot">'
-    + unitCardHtml
+    + '<div id="apartament">'
+    + '<div class="unit-card">'
+      + '<div class="eyebrow-row"><div class="eyebrow">Твоят апартамент</div>' + updatedBadgeHtml + '</div>'
+      + '<h2>' + escapeHtml(d.unit) + '</h2>'
+      + '<div class="due"><div class="due-left"><div class="due-label">Дължимо към момента</div>'
+      + '<div class="due-meta">' + fmt(d.feePerMonth) + '/мес.' + (s.overdueMonths > 0 ? ' · ' + s.overdueMonths + ' неплатени месеца' : '') + '</div></div>'
+      + '<div class="due-amt ' + (due > 0 ? 'owe' : 'zero') + '">' + (due > 0 ? fmt(due) : 'Всичко платено') + '</div></div>'
+      + payBoxHtml
+    + '</div>'
     + statStripHtml
     + runwayHtml
-    + (d.isAdmin ? '<button class="admin-toggle" id="adminToggleBtn" onclick="toggleAdmin()">📊 Разширен изглед — всички длъжници (' + escapeHtml(d.role) + ')</button>' : '')
+    + (d.isAdmin ? '<button class="admin-toggle" id="adminToggleBtn" onclick="toggleAdmin()">📊 Разширен изглед — всички длъжници (' + d.role + ')</button>' : '')
     + '<div id="adminView" class="hidden"><div id="printSection">'
       + '<div class="print-date" id="printDate"></div>'
-      + '<div class="admin-header"><h3>Длъжници — Вход Б, Grand Azurro</h3>'
+      + '<div class="admin-header"><h3>Длъжници — Вход А, Grand Azurro</h3>'
       + '<div style="display:flex;gap:8px"><button class="print-btn" onclick="window.print()">🖨️ Принтирай</button><button class="admin-close" onclick="toggleAdmin()">Затвори</button></div></div>'
       + '<div class="chart-box" id="allDebtorsBox"><canvas id="allDebtorsChart"></canvas></div>'
       + '</div></div>'
@@ -910,61 +933,86 @@ function drawCharts(d){
   var debtorsCard = document.getElementById('debtorsCard');
   if (d.debtorsChart && d.debtorsChart.length) {
     var maxVal1 = Math.max.apply(null, d.debtorsChart.map(function(x){ return x.due; }));
-    debtorsCard.innerHTML = '<div class="debtor-bars">' + d.debtorsChart.map(function(x, i){
+    var barsHtml = '<div class="debtor-bars">' + d.debtorsChart.map(function(x, i){
       var pct = maxVal1 > 0 ? Math.max(4, Math.round(x.due / maxVal1 * 100)) : 0;
       var color = i < 2 ? red : amber;
       return '<div class="debtor-bar-row">'
-        + '<div class="debtor-bar-id">' + escapeHtml(shortUnit(x.unit)) + '</div>'
+        + '<div class="debtor-bar-id">' + escapeHtml(x.unit.replace('Апартамент ','')) + '</div>'
         + '<div class="debtor-bar-track"><div class="debtor-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>'
         + '<div class="debtor-bar-sum">' + x.due.toFixed(2) + ' €</div>'
         + '</div>';
     }).join('') + '</div>';
+    debtorsCard.innerHTML = barsHtml;
   } else {
-    debtorsCard.innerHTML = '<div class="chart-note">Няма обекти със задължения. 🎉</div>';
+    debtorsCard.innerHTML = '<div class="chart-note">Няма апартаменти със задължения. 🎉</div>';
   }
 
   var fullTrend = d.budgetTrend || [];
   var runningCash = 0;
   var fullCash = fullTrend.map(function(x){ runningCash += (x.income - x.expense); return Math.round(runningCash * 100) / 100; });
+  // Показваме само последните 6 месеца, но кумулативната каса се смята от цялата история, за да е вярна отправната точка.
   var trend = fullTrend.slice(-6);
   var cashData = fullCash.slice(-6);
-  var labels = trend.map(function(x){ return monthLabel(x.month); });
+  var rawMonths = trend.map(function(x){ return x.month; });
+  var labels = rawMonths.map(monthLabel);
   var incomeData = trend.map(function(x){ return x.income; });
   var expenseData = trend.map(function(x){ return -x.expense; });
 
-  new Chart(document.getElementById('incomeExpenseChart').getContext('2d'), {
+  // ---- Приходи и разходи: единична ос (и двете са месечен паричен поток в €, сравними по мащаб) ----
+  // Разходите обикновено са в пъти по-малки от приходите, затова им слагаме директен етикет
+  // върху всеки стълб — иначе стойността се губи визуално дори когато е реална и важна.
+  var ctxIE = document.getElementById('incomeExpenseChart').getContext('2d');
+  new Chart(ctxIE, {
     type: 'bar',
-    data: { labels: labels, datasets: [
-      { label: 'Приходи', data: incomeData, backgroundColor: green, borderRadius: 3 },
-      { label: 'Разходи', data: expenseData, backgroundColor: red, borderRadius: 3 }
-    ] },
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Приходи', data: incomeData, backgroundColor: green, borderRadius: 3 },
+        { label: 'Разходи', data: expenseData, backgroundColor: red, borderRadius: 3 }
+      ]
+    },
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: { labels: { color: muted, font: { family: 'Nunito Sans', size: 11 } } },
         datalabels: {
           display: function(ctx){ return ctx.datasetIndex === 1 && Math.abs(ctx.dataset.data[ctx.dataIndex]) > 0.004; },
-          color: red, font: { size: 10, weight: '600' }, anchor: 'end', align: 'bottom', offset: 2,
+          color: red, font: { size: 10, weight: '600' },
+          anchor: 'end', align: 'bottom', offset: 2,
           formatter: function(v){ return '-' + Math.abs(v).toFixed(0) + ' €'; }
         },
-        tooltip: { callbacks: { label: function(ctx){ return ctx.dataset.label + ': ' + Math.abs(ctx.parsed.y).toFixed(2) + ' €'; } } }
+        tooltip: { callbacks: { label: function(ctx){
+          return ctx.dataset.label + ': ' + Math.abs(ctx.parsed.y).toFixed(2) + ' €';
+        } } }
       },
       scales: {
-        x: { ticks: { color: muted, font: { size: 10 }, maxRotation: 0, minRotation: 0 }, grid: { display: false } },
+        x: {
+          ticks: { color: muted, font: { size: 10 }, maxRotation: 0, minRotation: 0 },
+          grid: { display: false }
+        },
         y: { ticks: { color: muted, font: { size: 11 }, callback: function(v){ return v + ' €'; } }, grid: { color: gridColor } }
       }
     }
   });
 
-  new Chart(document.getElementById('cashChart').getContext('2d'), {
+  // ---- Каса: отделна графика със собствена ос — кумулативният баланс е с друг порядък от месечните
+  // потоци (хиляди срещу стотици €), затова споделянето на една ос с приходи/разходи би било подвеждащо.
+  var ctxCash = document.getElementById('cashChart').getContext('2d');
+  new Chart(ctxCash, {
     type: 'line',
-    data: { labels: labels, datasets: [
-      { label: 'Каса (кумулативно)', data: cashData, borderColor: '#192166', backgroundColor: 'rgba(25,33,102,0.08)', fill: true, borderWidth: 2, pointRadius: 0, tension: .25 }
-    ] },
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Каса (кумулативно)', data: cashData, borderColor: '#192166', backgroundColor: 'rgba(25,33,102,0.08)', fill: true, borderWidth: 2, pointRadius: 0, tension: .25 }
+      ]
+    },
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: { display: false }, datalabels: { display: false },
+        legend: { display: false },
+        datalabels: { display: false },
         tooltip: { callbacks: { label: function(ctx){ return 'Каса: ' + ctx.parsed.y.toFixed(2) + ' €'; } } }
       },
       scales: {
@@ -979,21 +1027,36 @@ document.getElementById('code').addEventListener('keydown', function(e){ if (e.k
 
 // ---- PWA: service worker + install banner ----
 if ('serviceWorker' in navigator && !IS_DEMO_MODE) {
-  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
 }
+
 var __deferredInstallPrompt = null;
-window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); __deferredInstallPrompt = e; showInstallBanner(false); });
-function isStandalone(){ return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
-function isIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent); }
-function lsGet_(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
-function lsSet_(k, v){ try { localStorage.setItem(k, v); } catch (e) {} }
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  __deferredInstallPrompt = e;
+  showInstallBanner(false);
+});
+
+function isStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function isIOS(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
 function showInstallBanner(iosMode){
-  if (isStandalone() || lsGet_('vhodB_installDismissed') === '1') return;
+  if (isStandalone() || localStorage.getItem('vhodA_installDismissed') === '1') return;
   var banner = document.getElementById('installBanner');
   var btn = document.getElementById('installBtn');
   var text = document.getElementById('installText');
-  if (iosMode) { text.textContent = '📲 На iPhone: натисни Сподели, после "Добави към начален екран"'; btn.classList.add('hidden'); }
-  else { text.textContent = '📲 Инсталирай портала на началния екран за по-бърз достъп'; btn.classList.remove('hidden'); }
+  if (iosMode) {
+    text.textContent = '📲 На iPhone: натисни Сподели, после "Добави към начален екран"';
+    btn.classList.add('hidden');
+  } else {
+    text.textContent = '📲 Инсталирай портала на началния екран за по-бърз достъп';
+    btn.classList.remove('hidden');
+  }
   banner.classList.remove('hidden');
 }
 function doInstall(){
@@ -1001,7 +1064,10 @@ function doInstall(){
   __deferredInstallPrompt.prompt();
   __deferredInstallPrompt.userChoice.then(function(){ __deferredInstallPrompt = null; dismissInstall(); });
 }
-function dismissInstall(){ document.getElementById('installBanner').classList.add('hidden'); lsSet_('vhodB_installDismissed', '1'); }
+function dismissInstall(){
+  document.getElementById('installBanner').classList.add('hidden');
+  localStorage.setItem('vhodA_installDismissed', '1');
+}
 if (isIOS() && !isStandalone()) { showInstallBanner(true); }
 </script>
 </body>
