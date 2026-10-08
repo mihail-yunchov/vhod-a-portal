@@ -230,7 +230,10 @@
   .proto-row{display:none}
   .proto-row.show{display:block}
 
-  .portal-nav{position:sticky;top:0;z-index:20;margin:0 -18px 18px;padding:12px 18px 10px;background:linear-gradient(rgba(238,242,248,0.88) 70%, rgba(238,242,248,0));backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);}
+  /* Менюто е напълно прозрачно в покой (няма видим "правоъгълник" върху фона); фонът с размазване се
+     включва САМО докато е залепено най-горе и съдържанието минава отдолу (клас .stuck, виж scroll слушателя). */
+  .portal-nav{position:sticky;top:0;z-index:20;margin:0 -18px 18px;padding:12px 18px 10px;background:transparent;transition:background .2s ease, box-shadow .2s ease;}
+  .portal-nav.stuck{background:rgba(238,242,248,0.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 1px 0 rgba(25,33,102,0.06);}
   .portal-nav-inner{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .portal-nav-inner::-webkit-scrollbar{display:none}
   .nav-pill{flex:0 0 auto;min-height:36px;display:inline-flex;align-items:center;padding:0 13px;border-radius:999px;background:var(--surface);color:var(--navy);font-size:12.5px;font-weight:700;text-decoration:none;border:1px solid var(--border);white-space:nowrap}
@@ -635,6 +638,15 @@ function resetQuorum(){
   document.querySelectorAll('#quorumList input[type=checkbox]').forEach(function(b){ b.checked = false; });
   recomputeQuorum(null);
 }
+
+// ---- Меню: включва фона (.stuck) само когато е реално залепено най-горе ----
+function updateNavStuck_(){
+  var n = document.querySelector('.portal-nav');
+  if (!n) return;
+  n.classList.toggle('stuck', n.getBoundingClientRect().top <= 0.5 && window.scrollY > 0);
+}
+window.addEventListener('scroll', updateNavStuck_, { passive: true });
+window.addEventListener('resize', updateNavStuck_);
 
 // ---- Session timeout (10 мин бездействие) — НЕ важи за Касиер/Домоуправител: по време на
 // събрание порталът трябва да стои отворен за записване на присъствие/кворум произволно дълго,
