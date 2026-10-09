@@ -482,15 +482,16 @@ function drawAdminChart(d){
   var ctx = document.getElementById('allDebtorsChart').getContext('2d');
   var maxVal = Math.max.apply(null, list.map(function(x){ return x.due + x.rest + x.next; }));
   var sets = [
-    { key: 'due',  label: 'Дължимо към момента',            color: '#d97706' },
-    { key: 'rest', label: 'Остатък до края на ' + curTxt,    color: '#f1c27d' },
-    { key: 'next', label: 'Следващо тримесечие (' + nextTxt + ')', color: '#1fb5c3' }
+    { key: 'due',  label: 'Дължимо сега',            color: '#d97706' },
+    { key: 'rest', label: 'Остатък ' + curTxt,    color: '#f1c27d' },
+    { key: 'next', label: 'Следващо ' + nextTxt, color: '#1fb5c3' }
   ];
   function labelText(row){
-    var t = row.due > 0.005 ? row.due.toFixed(2) + ' €' : '';
-    if (row.rest > 0.005) t += (t ? '  (+' + row.rest.toFixed(2) + ')' : '+' + row.rest.toFixed(2) + ' €');
-    if (row.next > 0.005) t = 'следв. ' + row.next.toFixed(2) + ' €';
-    return t;
+    // Първо ОБЩАТА сума (до края на текущото тримесечие), в скоби — колко от нея е дължимо вече сега.
+    if (row.next > 0.005) return 'следв. ' + row.next.toFixed(2) + ' €';
+    var total = row.due + row.rest;
+    if (row.due > 0.005 && row.rest > 0.005) return total.toFixed(2) + ' € (сега ' + row.due.toFixed(2) + ')';
+    return total.toFixed(2) + ' €';
   }
   window.__adminChart = new Chart(ctx, {
     type: 'bar',
@@ -517,13 +518,13 @@ function drawAdminChart(d){
       indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: { right: 100 } },
+      layout: { padding: { right: 135 } },
       plugins: {
         legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, color: '#192166', font: { size: 11, weight: '700' } } },
         tooltip: { callbacks: { label: function(c){ return c.dataset.label + ': ' + c.parsed.x.toFixed(2) + ' €'; } } }
       },
       scales: {
-        x: { stacked: true, suggestedMax: maxVal * 1.5, ticks: { color: '#7a85a8', callback: function(v){ return v + ' €'; } }, grid: { color: 'rgba(25,33,102,0.08)' } },
+        x: { stacked: true, suggestedMax: maxVal * 1.6, ticks: { color: '#7a85a8', callback: function(v){ return v + ' €'; } }, grid: { color: 'rgba(25,33,102,0.08)' } },
         y: { stacked: true, ticks: { color: '#192166', font: { weight: '700' } }, grid: { display: false } }
       }
     }
