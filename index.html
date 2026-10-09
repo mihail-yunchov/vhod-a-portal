@@ -319,6 +319,13 @@ function monthLabel(key){
   var parts = key.split('-'); var names=['Яну','Фев','Мар','Апр','Май','Юни','Юли','Авг','Сеп','Окт','Ное','Дек'];
   return names[Number(parts[1])-1] + " '" + parts[0].slice(2);
 }
+// "Окт – Дек 2026" / "Дек 2026 – Фев 2027" от два ключа "YYYY-MM" (за тримесечията)
+function quarterLabel_(startKey, endKey){
+  var names=['Яну','Фев','Мар','Апр','Май','Юни','Юли','Авг','Сеп','Окт','Ное','Дек'];
+  var a = startKey.split('-'), b = endKey.split('-');
+  var left = names[Number(a[1])-1] + (a[0] !== b[0] ? ' ' + a[0] : '');
+  return left + ' – ' + names[Number(b[1])-1] + ' ' + b[0];
+}
 // Бекендът връща датите на журналните записи като текст "ДД.ММ.ГГГГ" (клетките в БЮДЖЕТ са текстови,
 // не истински Date) — native new Date("28.08.2026") НЕ го парсва (връща Invalid Date), затова първо
 // пробваме ръчно това конкретно текстово изписване, преди да опитаме стандартния парсър.
@@ -458,43 +465,110 @@ function toggleAdmin(){
 }
 
 function drawAdminChart(d){
-  var list = (d && d.allDebtors) || [];
+  // Общ админ списък по тримесечия (виж quarterRows в Code.gs): за всеки апартамент —
+  // дължимо сега + остатък до края на текущото тримесечие, а ако текущото е платено — следващото тримесечие.
+  var list = (d && d.quarterList) || [];
   var box = document.getElementById('allDebtorsBox');
   if (window.__adminChart) { window.__adminChart.destroy(); window.__adminChart = null; }
   if (!list.length) {
-    box.innerHTML = '<div class="chart-note" style="padding:30px 0">Няма апартаменти със задължения към момента. 🎉</div>';
+    box.innerHTML = '<div class="chart-note" style="padding:30px 0">Няма апартаменти със задължения за текущото и следващото тримесечие. 🎉</div>';
     return;
   }
+  var qp = d.quarterPeriods || {};
+  var curTxt = qp.current ? quarterLabel_(qp.current.startKey, qp.current.endKey) : 'текущо тримесечие';
+  var nextTxt = qp.next ? quarterLabel_(qp.next.startKey, qp.next.endKey) : 'следващо тримесечие';
   box.innerHTML = '<canvas id="allDebtorsChart"></canvas>';
-  box.style.height = Math.max(300, 34 * list.length) + 'px';
+  box.style.height = Math.max(300, 34 * list.length + 40) + 'px';
   var ctx = document.getElementById('allDebtorsChart').getContext('2d');
-  var maxVal = Math.max.apply(null, list.map(function(x){ return x.due; }));
+  var maxVal = Math.max.apply(null, list.map(function(x){ return x.due + x.rest + x.next; }));
+  var sets = [
+    { key: 'due',  label: 'Дължимо към момента',            color: '#d97706' },
+    { key: 'rest', label: 'Остатък до края на ' + curTxt,    color: '#f1c27d' },
+    { key: 'next', label: 'Следващо тримесечие (' + nextTxt + ')', color: '#1fb5c3' }
+  ];
+  function labelText(row){
+    var t = row.due > 0.005 ? row.due.toFixed(2) + ' €' : '';
+    if (row.rest > 0.005) t += (t ? '  (+' + row.rest.toFixed(2) + ')' : '+' + row.rest.toFixed(2) + ' €');
+    if (row.next > 0.005) t = 'следв. ' + row.next.toFixed(2) + ' €';
+    return t;
+  }
   window.__adminChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: list.map(function(x){ return x.unit.replace('Апартамент ',''); }),
-      datasets: [{ label: 'Дължимо', data: list.map(function(x){ return x.due; }), backgroundColor: '#d97706', borderRadius: 4 }]
+      datasets: sets.map(function(st, si){
+        return {
+          label: st.label, data: list.map(function(x){ return x[st.key]; }), backgroundColor: st.color, borderRadius: 3, borderSkipped: false,
+          datalabels: {
+            // Един етикет на ред — върху последния ненулев сегмент, т.е. в края на цялата лента.
+            display: function(c){
+              if (!(c.dataset.data[c.dataIndex] > 0.005)) return false;
+              for (var k = si + 1; k < sets.length; k++) { if (c.chart.data.datasets[k].data[c.dataIndex] > 0.005) return false; }
+              return true;
+            },
+            anchor: 'end', align: 'right', clamp: true, color: '#192166',
+            font: { weight: '800', size: 12, family: 'Nunito Sans' },
+            formatter: function(v, c){ return labelText(list[c.dataIndex]); }
+          }
+        };
+      })
     },
     options: {
       indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: { right: 55 } },
+      layout: { padding: { right: 100 } },
       plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: function(ctx){ return ctx.parsed.x.toFixed(2) + ' €'; } } },
-        datalabels: {
-          anchor: 'end', align: 'right', clamp: true,
-          color: '#192166', font: { weight: '800', size: 12, family: 'Nunito Sans' },
-          formatter: function(v){ return v.toFixed(2) + ' €'; }
-        }
+        legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, color: '#192166', font: { size: 11, weight: '700' } } },
+        tooltip: { callbacks: { label: function(c){ return c.dataset.label + ': ' + c.parsed.x.toFixed(2) + ' €'; } } }
       },
       scales: {
-        x: { suggestedMax: maxVal * 1.2, ticks: { color: '#7a85a8', callback: function(v){ return v + ' €'; } }, grid: { color: 'rgba(25,33,102,0.08)' } },
-        y: { ticks: { color: '#192166', font: { weight: '700' } }, grid: { display: false } }
+        x: { stacked: true, suggestedMax: maxVal * 1.5, ticks: { color: '#7a85a8', callback: function(v){ return v + ' €'; } }, grid: { color: 'rgba(25,33,102,0.08)' } },
+        y: { stacked: true, ticks: { color: '#192166', font: { weight: '700' } }, grid: { display: false } }
       }
     }
   });
+}
+
+// ---- Сваляне на админ списъка като Excel (.xlsx): колона 1 = обект, колона 2 = дължима сума ----
+// Сумата е общата за съответното тримесечие: дължимо сега + остатък до края на текущото, а ако текущото е
+// платено — сумата за следващото. SheetJS се зарежда чак при първо натискане (не забавя нормалното зареждане).
+function loadXlsx_(){
+  return new Promise(function(resolve, reject){
+    if (window.XLSX) return resolve(window.XLSX);
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload = function(){ window.XLSX ? resolve(window.XLSX) : reject(new Error('xlsx')); };
+    s.onerror = function(){ reject(new Error('xlsx load')); };
+    document.head.appendChild(s);
+  });
+}
+function downloadDebtorsExcel(){
+  var d = window.__lastData || {};
+  var list = d.quarterList || [];
+  if (!list.length) { alert('Няма данни за сваляне.'); return; }
+  var today = new Date();
+  var stamp = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+  var rows = list.map(function(x){ return [x.unit, Math.round((x.due + x.rest + x.next) * 100) / 100]; });
+  var btn = document.getElementById('dlExcelBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Подготвям…'; }
+  function done(){ if (btn) { btn.disabled = false; btn.textContent = '⬇️ Свали Excel'; } }
+  loadXlsx_().then(function(XLSX){
+    var aoa = [['Обект', 'Дължима сума (€)']].concat(rows);
+    var ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = [{ wch: 26 }, { wch: 20 }];
+    for (var r = 2; r <= aoa.length; r++) { if (ws['B' + r]) ws['B' + r].z = '#,##0.00'; }
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Дължимо');
+    XLSX.writeFile(wb, 'Dalzhimo_Vhod_A_' + stamp + '.xlsx');
+  }).catch(function(){
+    // Резервен вариант, ако библиотеката не може да се зареди: CSV (UTF-8 с BOM, разделител ";" за български Excel)
+    var csv = '\uFEFFОбект;Дължима сума (€)\r\n' + rows.map(function(r){ return r[0] + ';' + r[1].toFixed(2).replace('.', ','); }).join('\r\n');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = 'Dalzhimo_Vhod_A_' + stamp + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+  }).then(done, done);
 }
 
 var IS_DEMO_MODE = SCRIPT_URL.indexOf('PASTE_YOUR') !== -1;
@@ -767,6 +841,25 @@ function render(d){
     ? '<div class="report-list">' + protocolsHtml + '</div>'
     : '<div style="color:var(--muted);font-size:13px">Няма качени протоколи все още.</div>');
 
+  // Задължение за тримесечие (ЗУЕС/решение на ОС: такси се плащат на тримесечия). Показва остатъка до края на
+  // текущото тримесечие, а ако то е напълно платено — сумата за следващото. Логиката е в Code.gs (quarterObligation_).
+  var quarterChipHtml = '';
+  if (d.quarter && d.quarter.startKey) {
+    var q = d.quarter, qLabel = quarterLabel_(q.startKey, q.endKey);
+    if (q.covered) {
+      quarterChipHtml = '<div class="stat-chip full"><div class="stat-num" style="color:var(--green,#3d9e4a)">✓</div>'
+        + '<div class="stat-info"><strong style="color:var(--text)">Тримесечия — платено</strong> — текущото и следващото тримесечие (до ' + escapeHtml(quarterLabel_(q.endKey, q.endKey).split(' – ')[1]) + ') са покрити.</div></div>';
+    } else {
+      var qTitle = q.isNext ? 'Следващо тримесечие (' + qLabel + ')' : 'До края на тримесечието (' + qLabel + ')';
+      var qDesc = q.isNext
+        ? 'текущото тримесечие е платено; това е сумата за следващото (без вече направени авансови плащания).'
+        : 'дължимото към момента (' + fmt(q.dueNow) + ') плюс оставащите месеци до края на тримесечието.';
+      quarterChipHtml = '<div class="stat-chip full' + (!q.isNext && q.dueNow > 0 ? ' warn' : '') + '">'
+        + '<div class="stat-num">' + fmt(q.amount) + '</div>'
+        + '<div class="stat-info"><strong style="color:var(--text)">' + qTitle + '</strong> — ' + qDesc + '</div></div>';
+    }
+  }
+
   var s = d.stats || {};
   var statStripHtml = '<div class="stat-strip">'
     + '<div class="stat-chip' + (s.paidThisMonth === 0 ? ' warn' : '') + '">'
@@ -779,6 +872,7 @@ function render(d){
       + '<div class="stat-label">твои неплатени месеца</div>'
       + '<div class="stat-info">Второто число е откога си собственик.</div>'
       + '</div>'
+    + quarterChipHtml
     + '<div class="stat-chip full' + (due > 0 ? ' warn' : '') + '">'
       + '<div class="stat-num">' + fmt(s.yearEndProjection) + '</div>'
       + '<div class="stat-info"><strong style="color:var(--text)">Проекция до края на годината</strong> — ако не платиш нищо оттук насетне: текущ дълг + оставащите месечни такси.</div>'
@@ -888,11 +982,11 @@ function render(d){
     + '</div>'
     + statStripHtml
     + runwayHtml
-    + (d.isAdmin ? '<button class="admin-toggle" id="adminToggleBtn" onclick="toggleAdmin()">📊 Разширен изглед — всички длъжници (' + d.role + ')</button>' : '')
+    + (d.isAdmin ? '<button class="admin-toggle" id="adminToggleBtn" onclick="toggleAdmin()">📊 Разширен изглед — задължения по тримесечия (' + d.role + ')</button>' : '')
     + '<div id="adminView" class="hidden"><div id="printSection">'
       + '<div class="print-date" id="printDate"></div>'
-      + '<div class="admin-header"><h3>Длъжници — Вход А, Grand Azurro</h3>'
-      + '<div style="display:flex;gap:8px"><button class="print-btn" onclick="window.print()">🖨️ Принтирай</button><button class="admin-close" onclick="toggleAdmin()">Затвори</button></div></div>'
+      + '<div class="admin-header"><h3>Задължения — Вход А, Grand Azurro</h3>'
+      + '<div style="display:flex;gap:8px"><button class="print-btn" id="dlExcelBtn" onclick="downloadDebtorsExcel()">⬇️ Свали Excel</button><button class="admin-close" onclick="toggleAdmin()">Затвори</button></div></div>'
       + '<div class="chart-box" id="allDebtorsBox"><canvas id="allDebtorsChart"></canvas></div>'
       + '</div></div>'
     + '</div>'
