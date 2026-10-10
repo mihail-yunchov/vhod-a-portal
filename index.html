@@ -555,13 +555,11 @@ function downloadDebtorsExcel(){
   var d = window.__lastData || {};
   var list = d.quarterList || [];
   if (!list.length) { alert('Няма данни за сваляне.'); return; }
-  if (!list.some(function(x){ return x.due + x.rest > 0.005; })) { alert('Няма задължения за текущото тримесечие.'); return; }
   var today = new Date();
   var stamp = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-  // В Excel влизат САМО задълженията за текущото тримесечие (дължимо сега + остатък до края му).
-  // Обектите със "следв." (платили текущото, дължат само бъдещо тримесечие) не се експортват.
-  var rows = list.filter(function(x){ return x.due + x.rest > 0.005; })
-                 .map(function(x){ return [x.unit, Math.round((x.due + x.rest) * 100) / 100]; });
+  // В Excel влизат всички обекти от списъка. Сумата е само за ТЕКУЩОТО тримесечие (дължимо сега + остатък до края му);
+  // обектите със "следв." (нищо не дължат за текущото) остават като ред със сума 0, показана като "-".
+  var rows = list.map(function(x){ return [x.unit, Math.round((x.due + x.rest) * 100) / 100]; });
   var btn = document.getElementById('dlExcelBtn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Подготвям…'; }
   function done(){ if (btn) { btn.disabled = false; btn.textContent = '⬇️ Свали Excel'; } }
@@ -569,7 +567,7 @@ function downloadDebtorsExcel(){
     var aoa = [['Обект', 'Дължима сума (€)']].concat(rows);
     var ws = XLSX.utils.aoa_to_sheet(aoa);
     ws['!cols'] = [{ wch: 26 }, { wch: 20 }];
-    for (var r = 2; r <= aoa.length; r++) { if (ws['B' + r]) ws['B' + r].z = '#,##0.00'; }
+    for (var r = 2; r <= aoa.length; r++) { if (ws['B' + r]) ws['B' + r].z = '#,##0.00;(#,##0.00);-'; }
     var wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Дължимо');
     XLSX.writeFile(wb, 'Dalzhimo_Vhod_A_' + stamp + '.xlsx');
