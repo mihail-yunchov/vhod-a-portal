@@ -469,6 +469,14 @@ function drawAdminChart(d){
   // дължимо сега + остатък до края на текущото тримесечие, а ако текущото е платено — следващото тримесечие.
   var list = (d && d.quarterList) || [];
   var box = document.getElementById('allDebtorsBox');
+  // Платили напред (и текущото, и следващото тримесечие) — не са в списъка; показваме ги отделно, за да се вижда, че не са пропуснати.
+  var covEl = document.getElementById('coveredNote');
+  if (covEl) {
+    var cov = (d && d.quarterCovered) || [];
+    covEl.innerHTML = cov.length
+      ? '<strong>Платили напред — не са в списъка:</strong> ' + cov.map(function(x){ return escapeHtml(x.unit.replace('Апартамент ','')) + ' (до ' + escapeHtml(monthLabel(x.until)) + ')'; }).join(', ')
+      : '';
+  }
   if (window.__adminChart) { window.__adminChart.destroy(); window.__adminChart = null; }
   if (!list.length) {
     box.innerHTML = '<div class="chart-note" style="padding:30px 0">Няма апартаменти със задължения за текущото и следващото тримесечие. 🎉</div>';
@@ -532,8 +540,7 @@ function drawAdminChart(d){
 }
 
 // ---- Сваляне на админ списъка като Excel (.xlsx): колона 1 = обект, колона 2 = дължима сума ----
-// Сумата е общата за съответното тримесечие: дължимо сега + остатък до края на текущото, а ако текущото е
-// платено — сумата за следващото. SheetJS се зарежда чак при първо натискане (не забавя нормалното зареждане).
+// Сумата е за ТЕКУЩОТО тримесечие: дължимо сега + остатък до края му. Бъдещото тримесечие не се експортва. SheetJS се зарежда чак при първо натискане (не забавя нормалното зареждане).
 function loadXlsx_(){
   return new Promise(function(resolve, reject){
     if (window.XLSX) return resolve(window.XLSX);
@@ -548,9 +555,13 @@ function downloadDebtorsExcel(){
   var d = window.__lastData || {};
   var list = d.quarterList || [];
   if (!list.length) { alert('Няма данни за сваляне.'); return; }
+  if (!list.some(function(x){ return x.due + x.rest > 0.005; })) { alert('Няма задължения за текущото тримесечие.'); return; }
   var today = new Date();
   var stamp = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-  var rows = list.map(function(x){ return [x.unit, Math.round((x.due + x.rest + x.next) * 100) / 100]; });
+  // В Excel влизат САМО задълженията за текущото тримесечие (дължимо сега + остатък до края му).
+  // Обектите със "следв." (платили текущото, дължат само бъдещо тримесечие) не се експортват.
+  var rows = list.filter(function(x){ return x.due + x.rest > 0.005; })
+                 .map(function(x){ return [x.unit, Math.round((x.due + x.rest) * 100) / 100]; });
   var btn = document.getElementById('dlExcelBtn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Подготвям…'; }
   function done(){ if (btn) { btn.disabled = false; btn.textContent = '⬇️ Свали Excel'; } }
@@ -989,6 +1000,7 @@ function render(d){
       + '<div class="admin-header"><h3>Задължения — Вход А, Grand Azurro</h3>'
       + '<div style="display:flex;gap:8px"><button class="print-btn" id="dlExcelBtn" onclick="downloadDebtorsExcel()">⬇️ Свали Excel</button><button class="admin-close" onclick="toggleAdmin()">Затвори</button></div></div>'
       + '<div class="chart-box" id="allDebtorsBox"><canvas id="allDebtorsChart"></canvas></div>'
+      + '<div class="chart-note" id="coveredNote" style="font-size:11.5px;margin-top:10px;text-align:left"></div>'
       + '</div></div>'
     + '</div>'
     + '<div id="finansi">'
