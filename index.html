@@ -489,17 +489,14 @@ function drawAdminChart(d){
   box.style.height = Math.max(300, 34 * list.length + 40) + 'px';
   var ctx = document.getElementById('allDebtorsChart').getContext('2d');
   var maxVal = Math.max.apply(null, list.map(function(x){ return x.due + x.rest + x.next; }));
+  // Две серии: сума за текущото тримесечие (дължимо сега + остатък, обединени) и следващо тримесечие (само когато текущото е платено).
   var sets = [
-    { key: 'due',  label: 'Дължимо сега',            color: '#d97706' },
-    { key: 'rest', label: 'Остатък ' + curTxt,    color: '#f1c27d' },
-    { key: 'next', label: 'Следващо ' + nextTxt, color: '#1fb5c3' }
+    { key: 'cur',  label: 'Тримесечие ' + curTxt,  color: '#d97706', get: function(x){ return x.due + x.rest; } },
+    { key: 'next', label: 'Следващо ' + nextTxt, color: '#1fb5c3', get: function(x){ return x.next; } }
   ];
   function labelText(row){
-    // Първо ОБЩАТА сума (до края на текущото тримесечие), в скоби — колко от нея е дължимо вече сега.
     if (row.next > 0.005) return 'следв. ' + row.next.toFixed(2) + ' €';
-    var total = row.due + row.rest;
-    if (row.due > 0.005 && row.rest > 0.005) return total.toFixed(2) + ' € (сега ' + row.due.toFixed(2) + ')';
-    return total.toFixed(2) + ' €';
+    return (row.due + row.rest).toFixed(2) + ' €';
   }
   window.__adminChart = new Chart(ctx, {
     type: 'bar',
@@ -507,7 +504,7 @@ function drawAdminChart(d){
       labels: list.map(function(x){ return x.unit.replace('Апартамент ',''); }),
       datasets: sets.map(function(st, si){
         return {
-          label: st.label, data: list.map(function(x){ return x[st.key]; }), backgroundColor: st.color, borderRadius: 3, borderSkipped: false,
+          label: st.label, data: list.map(st.get), backgroundColor: st.color, borderRadius: 3, borderSkipped: false,
           datalabels: {
             // Един етикет на ред — върху последния ненулев сегмент, т.е. в края на цялата лента.
             display: function(c){
@@ -526,13 +523,16 @@ function drawAdminChart(d){
       indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: { right: 135 } },
+      layout: { padding: { right: 95 } },
       plugins: {
         legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, color: '#192166', font: { size: 11, weight: '700' } } },
-        tooltip: { callbacks: { label: function(c){ return c.dataset.label + ': ' + c.parsed.x.toFixed(2) + ' €'; } } }
+        tooltip: { callbacks: {
+          label: function(c){ return c.dataset.label + ': ' + c.parsed.x.toFixed(2) + ' €'; },
+          afterLabel: function(c){ var r = list[c.dataIndex]; return (c.datasetIndex === 0 && r.due > 0.005 && r.rest > 0.005) ? 'от тях дължимо вече сега: ' + r.due.toFixed(2) + ' €' : ''; }
+        } }
       },
       scales: {
-        x: { stacked: true, suggestedMax: maxVal * 1.6, ticks: { color: '#7a85a8', callback: function(v){ return v + ' €'; } }, grid: { color: 'rgba(25,33,102,0.08)' } },
+        x: { stacked: true, suggestedMax: maxVal * 1.35, ticks: { color: '#7a85a8', callback: function(v){ return v + ' €'; } }, grid: { color: 'rgba(25,33,102,0.08)' } },
         y: { stacked: true, ticks: { color: '#192166', font: { weight: '700' } }, grid: { display: false } }
       }
     }
