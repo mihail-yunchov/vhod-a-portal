@@ -883,10 +883,6 @@ function render(d){
       + '<div class="stat-info">Второто число е откога си собственик.</div>'
       + '</div>'
     + quarterChipHtml
-    + '<div class="stat-chip full' + (due > 0 ? ' warn' : '') + '">'
-      + '<div class="stat-num">' + fmt(s.yearEndProjection) + '</div>'
-      + '<div class="stat-info"><strong style="color:var(--text)">Проекция до края на годината</strong> — ако не платиш нищо оттук насетне: текущ дълг + оставащите месечни такси.</div>'
-      + '</div>'
     + '</div>';
 
   var runwayHtml = '';
@@ -1040,7 +1036,7 @@ function drawCharts(d){
     var maxVal1 = Math.max.apply(null, d.debtorsChart.map(function(x){ return x.due; }));
     var barsHtml = '<div class="debtor-bars">' + d.debtorsChart.map(function(x, i){
       var pct = maxVal1 > 0 ? Math.max(4, Math.round(x.due / maxVal1 * 100)) : 0;
-      var color = i < 2 ? red : amber;
+      var color = i < 3 ? red : amber;
       return '<div class="debtor-bar-row">'
         + '<div class="debtor-bar-id">' + escapeHtml(x.unit.replace('Апартамент ','')) + '</div>'
         + '<div class="debtor-bar-track"><div class="debtor-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>'
