@@ -580,13 +580,14 @@ function loadXlsx_(){
 }
 function downloadDebtorsExcel(){
   var d = window.__lastData || {};
-  var list = d.quarterList || [];
+  // quarterAll = ВСИЧКИ обекти (вкл. платилите напред, сума 0 → "-"); резервно quarterList при стар бекенд.
+  var list = (d.quarterAll && d.quarterAll.length) ? d.quarterAll : (d.quarterList || []);
   if (!list.length) { alert('Няма данни за сваляне.'); return; }
   var today = new Date();
   var stamp = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
   // В Excel влизат всички обекти от списъка. Сумата е само за ТЕКУЩОТО тримесечие (дължимо сега + остатък до края му);
   // обектите със "следв." (нищо не дължат за текущото) остават като ред със сума 0, показана като "-".
-  var rows = list.map(function(x){ return [x.unit, Math.round((x.due + x.rest) * 100) / 100, x.paid != null ? x.paid : 0]; });
+  var rows = list.map(function(x){ return [x.unit, x.amount != null ? x.amount : Math.round((x.due + x.rest) * 100) / 100, x.paid != null ? x.paid : 0]; });
   var btn = document.getElementById('dlExcelBtn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Подготвям…'; }
   function done(){ if (btn) { btn.disabled = false; btn.textContent = '⬇️ Свали Excel'; } }
