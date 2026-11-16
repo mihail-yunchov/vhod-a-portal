@@ -238,6 +238,15 @@
   .proto-type-chip{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:6px;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
   .proto-type-chip.regular{background:var(--green-tint);color:#1f5c2a}
   .proto-type-chip.extra{background:var(--amber-tint);color:#8a5205}
+  .proto-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 8px rgba(25,33,102,0.04);overflow:hidden}
+  .proto-card summary{padding:13px 14px;cursor:pointer;list-style:none}
+  .proto-card summary::-webkit-details-marker{display:none}
+  .proto-card summary::after{content:'▾';float:right;color:var(--muted);margin-top:-30px;font-size:14px}
+  .proto-card[open] summary::after{content:'▴'}
+  .proto-body{padding:0 14px 14px;border-top:1px solid var(--border)}
+  .proto-h{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--teal-deep);margin:12px 0 4px}
+  /* pre-line: новите редове в клетките C и D на лист ПРОТОКОЛИ се запазват (номерираните точки) */
+  .proto-text{font-size:13px;line-height:1.55;white-space:pre-line;color:var(--text);overflow-wrap:anywhere}
   .proto-row{display:none}
   .proto-row.show{display:block}
 
@@ -314,7 +323,8 @@
 <script>
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9hMZpDQ-PLtV0KfdftacqZR3AB3KusVmlIqdKA2q5qgxOg5qm9GFKVslpa-lPmQGzhA/exec";
 
-// Таб "Архив" (протоколи от общи събрания). Пуснат на 16.11.2026, след като беше нанесен
+// Секция "Решения" (протоколи от общи събрания, лист ПРОТОКОЛИ) — пусната на 16.11.2026,
+// в изгледа на Сутерен: сгъваема карта с "Дневен ред" и "Решения". Нанесен беше
 // протоколът от ОС на 21.10.2026. За да се скрие отново: смени на false и качи файла наново.
 var SHOW_PROTOCOLS = true;
 
@@ -807,7 +817,7 @@ function buildPortalNavHtml_(isAdmin){
   return '<div class="portal-nav"><div class="portal-nav-inner">'
     + '<a href="#apartament" class="nav-pill">Моят апартамент</a>'
     + '<a href="#finansi" class="nav-pill">Финанси</a>'
-    + (SHOW_PROTOCOLS ? '<a href="#arhiv" class="nav-pill">Архив</a>' : '')
+    + (SHOW_PROTOCOLS ? '<a href="#arhiv" class="nav-pill">Решения</a>' : '')
     + '<a href="#pomosht" class="nav-pill">Помощ</a>'
     + (isAdmin ? '<a href="#kvorum" class="nav-pill">Кворум</a>' : '')
     + '</div></div>';
@@ -936,16 +946,19 @@ function render(d){
     : '';
   var protoTypeClassMap = { 'Редовно': 'regular', 'Извънредно': 'extra' };
   var protocolsHtml = (d.protocols || []).map(function(p){
-    var linkHtml = (p.link && /^https?:\/\//.test(p.link)) ? ' · <a href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener" style="color:var(--teal-deep);font-weight:700">Свали протокол ↗</a>' : '';
+    var linkHtml = (p.link && /^https?:\/\//.test(p.link)) ? '<div style="margin-top:12px"><a href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener" style="color:var(--teal-deep);font-weight:700">Свали протокол ↗</a></div>' : '';
     var dt = parseFlexDate_(p.date); var yr = dt ? dt.getFullYear() : '';
     var typeCls = protoTypeClassMap[p.type] || 'regular';
-    return '<div class="journal-row proto-row show" data-year="' + yr + '" style="align-items:flex-start"><div class="j-left"><strong>' + escapeHtml(p.topics) + '</strong>'
-      + '<span class="j-date">' + escapeHtml(formatDateShort(p.date)) + '<span class="proto-type-chip ' + typeCls + '">' + escapeHtml(p.type) + '</span>' + linkHtml + '</span>'
-      + '<div style="font-size:12px;color:var(--muted);margin-top:4px">' + escapeHtml(p.decisions) + '</div></div></div>';
+    return '<details class="proto-card proto-row show" data-year="' + yr + '"><summary><div class="j-left"><strong>Общо събрание — ' + escapeHtml(formatDateShort(p.date)) + '</strong>'
+      + '<span class="j-date"><span class="proto-type-chip ' + typeCls + '" style="margin-left:0">' + escapeHtml(p.type) + '</span></span></div></summary>'
+      + '<div class="proto-body">'
+      + (p.topics ? '<div class="proto-h">Дневен ред</div><div class="proto-text">' + escapeHtml(p.topics) + '</div>' : '')
+      + (p.decisions ? '<div class="proto-h">Решения</div><div class="proto-text">' + escapeHtml(p.decisions) + '</div>' : '')
+      + linkHtml + '</div></details>';
   }).join('');
   protocolsHtml = protoFiltersHtml + (protocolsHtml
     ? '<div class="report-list">' + protocolsHtml + '</div>'
-    : '<div style="color:var(--muted);font-size:13px">Няма качени протоколи все още.</div>');
+    : '<div style="color:var(--muted);font-size:13px">Все още няма качени решения.</div>');
 
   // Задължение за тримесечие (ЗУЕС/решение на ОС: такси се плащат на тримесечия). Показва остатъка до края на
   // текущото тримесечие, а ако то е напълно платено — сумата за следващото. Логиката е в Code.gs (quarterObligation_).
@@ -1119,7 +1132,7 @@ function render(d){
     + '</div>'
     + (SHOW_PROTOCOLS ? (
         '<div id="arhiv">'
-        + '<div class="section"><div class="section-label">Архив</div><div class="section-title">Протоколи от общи събрания</div>' + protocolsHtml + '</div>'
+        + '<div class="section"><div class="section-label">Решения</div><div class="section-title">Решения на общите събрания</div>' + protocolsHtml + '</div>'
         + '</div>'
       ) : '')
     + '<div id="pomosht">'
