@@ -895,13 +895,27 @@ function render(d){
       + '</div>';
   }
   if (rateCardHtml || dueCardHtml || fcCardHtml) budgetHtml += '<div class="budget-due-row">' + rateCardHtml + dueCardHtml + fcCardHtml + '</div>';
-  // Диагностика на листа ПЕРА (разпределение на разходите между ФРО и ФУП) — само за Касиер/Домоуправител.
-  if (d.isAdmin && d.fundMapInfo) {
-    var fm = d.fundMapInfo, unm = d.unmappedCategories || [], fmNote = '';
-    if (!fm.found) fmNote = 'Лист <b>ПЕРА</b> не е намерен — всички разходи се броят като ФУП.';
-    else if (!fm.rows) fmNote = 'Лист <b>ПЕРА</b> е намерен, но няма разпознати редове (колона A = категория, колона B = „ФРО“ или „Поддръжка“).';
-    else if (unm.length) fmNote = 'Категории без перо в листа <b>ПЕРА</b> (броят се като ФУП): <b>' + unm.map(escapeHtml).join(', ') + '</b>.';
-    if (fmNote) budgetHtml += '<div class="admin-note">⚠️ ' + fmNote + ' <span style="opacity:.75">(виждат само Касиер/Домоуправител)</span></div>';
+  // Диагностика само за Касиер/Домоуправител: листът ПЕРА и редове с валута BGN след въвеждането на еврото.
+  if (d.isAdmin) {
+    var admNotes = [];
+    if (d.fundMapInfo) {
+      var fm = d.fundMapInfo, unm = d.unmappedCategories || [], fmNote = '';
+      if (!fm.found) fmNote = 'Лист <b>ПЕРА</b> не е намерен — всички разходи се броят като ФУП.';
+      else if (!fm.rows) fmNote = 'Лист <b>ПЕРА</b> е намерен, но няма разпознати редове (колона A = категория, колона B = „ФРО“ или „Поддръжка“).';
+      else if (unm.length) fmNote = 'Категории без перо в листа <b>ПЕРА</b> (броят се като ФУП): <b>' + unm.map(escapeHtml).join(', ') + '</b>.';
+      if (fmNote) admNotes.push(fmNote);
+    }
+    var ba = d.bgnAfterEuro;
+    if (ba && (ba.payments || ba.budget)) {
+      var baParts = [];
+      if (ba.payments) baParts.push('<b>' + ba.payments + '</b> в ПЛАЩАНИЯ');
+      if (ba.budget) baParts.push('<b>' + ba.budget + '</b> в БЮДЖЕТ');
+      admNotes.push('Редове с валута <b>BGN</b> и дата от 01.01.2026 нататък: ' + baParts.join(' и ')
+        + '. Сумите им се делят на 1,95583. Ако плащането е в евро, смени валутата на <b>EUR</b>.');
+    }
+    admNotes.forEach(function(t){
+      budgetHtml += '<div class="admin-note">⚠️ ' + t + ' <span style="opacity:.75">(виждат само Касиер/Домоуправител)</span></div>';
+    });
   }
 
   var yearly = yearlyFromTrend(d.budgetTrend);
