@@ -349,13 +349,13 @@ function fmtOrDash(n, title){
 if (window.ChartDataLabels) { Chart.register(ChartDataLabels); }
 function monthLabel(key){
   var parts = key.split('-'); var names=['Яну','Фев','Мар','Апр','Май','Юни','Юли','Авг','Сеп','Окт','Ное','Дек'];
-  return names[Number(parts[1])-1] + " '" + parts[0].slice(2);
+  return names[Number(parts[1])-1] + ' ' + parts[0];
 }
-// Кратък вид на месец за "платено до": "2026-09" -> "9.'26"
+// Кратък вид на месец за "платено до": "2026-09" -> "9.26" (без апостроф, от 16.11.2026)
 function monthShort_(key){
   if (!key) return '';
   var p = String(key).split('-'); if (p.length < 2) return '';
-  return Number(p[1]) + ".'" + p[0].slice(2);
+  return Number(p[1]) + '.' + p[0].slice(2);
 }
 // "Окт – Дек 2026" / "Дек 2026 – Фев 2027" от два ключа "YYYY-MM" (за тримесечията)
 function quarterLabel_(startKey, endKey){
