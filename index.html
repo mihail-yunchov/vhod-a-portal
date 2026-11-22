@@ -904,6 +904,9 @@ function render(d){
     rateCardHtml = '<div class="budget-card budget-rate" title="' + escapeHtml(allYears.join('\n')) + '">'
       + '<div class="b-label">Събираемост</div><div class="b-val ' + rateCls + '">' + pctTxt(cr.pct) + '</div>'
       + '<div class="b-sub"><div>Събрано: <b>' + fmt(cr.collected) + '</b></div><div>Начислено: <b>' + fmt(cr.charged) + '</b></div></div>'
+      // (22.11.2026) Пояснение: "Събрано" е само от сегашните собственици (от "Такса дължима от"), затова може да е
+      // по-малко от "Приходи", които включват и плащания на предишни собственици (напр. А17 до 05.2025).
+      + '<div class="b-note">от сегашните собственици — без плащания на предишни</div>'
       + '</div>';
   }
   // Дължимо — само до края на ТЕКУЩОТО тримесечие (без "следв.").
