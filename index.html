@@ -868,27 +868,26 @@ function render(d){
   var due = Number(d.due) || 0;
   var totals = d.buildingTotals || {};
 
-  // Законова разбивка на СЪБРАНИТЕ такси: ФРО (Фонд Ремонт и Обновяване) vs. ФУП (Фонд Управление
-  // и Поддръжка) — показва се с по-ситен шрифт под общата сума на "Приходи". Обхваща само таксите
-  // от апартаментите (не и евентуални извънредни приходи), затова двете суми под линийката могат
-  // да излязат по-малко от общите "Приходи" отгоре — това е очаквано, не грешка.
+  // Законова разбивка: ФРО (Фонд Ремонт и Обновяване) vs. ФУП (управление и поддръжка = всичко останало).
   // (07.10.2026: етикетът е преименуван от "ТУП" на "ФУП" по искане на Мишо — стойността
   // зад него (d.maintenance*) е СЪЩАТА като преди и винаги, само надписът се смени, за яснота.)
-  // (22.11.2026) На телефон 6 карти × 2 реда ФРО/ФУП бяха твърде гъсто. Разбивката остава видима само под
-  // "Каса" (там е важна — двата фонда са отделни пари) и в "Прогноза"; за Приходи/Разходи/Дължимо е в
-  // подсказката при задържане (title).
+  // Разбивка ФРО/ФУП — видима под Приходи, Разходи и Каса (първият ред е пълна сметка по фондове:
+  // Приходи − Разходи = Каса за всеки фонд). От 22.11.2026 бекендът разпределя и допълнителните приходи по ПЕРА,
+  // така че ФРО + ФУП винаги дава общата сума отгоре — без ръчна сверка. "Дължимо" е само в подсказката (title).
   var froFupTitle_ = function(fro, fup){ return 'ФРО: ' + fmt(fro || 0) + '\nФУП: ' + fmt(fup || 0); };
-  var froBalSubHtml = '';
-  if (d.froBalance != null || d.maintenanceBalance != null) {
-    froBalSubHtml = '<div class="b-sub"><div>ФРО: <b>' + fmt(d.froBalance || 0) + '</b></div>'
-      + '<div>ФУП: <b>' + fmt(d.maintenanceBalance || 0) + '</b></div></div>';
-  }
+  var froFupSub_ = function(fro, fup){
+    if (fro == null && fup == null) return '';
+    return '<div class="b-sub"><div>ФРО: <b>' + fmt(fro || 0) + '</b></div><div>ФУП: <b>' + fmt(fup || 0) + '</b></div></div>';
+  };
+  var froSubHtml = froFupSub_(d.froCollected, d.maintenanceCollected);
+  var froExpSubHtml = froFupSub_(d.froExpense, d.maintenanceExpense);
+  var froBalSubHtml = froFupSub_(d.froBalance, d.maintenanceBalance);
   // Период на сумите: от първия месец с данни до днес (иначе "Приходи 31 412 €" се чете като "тази година").
   var trendStart = (d.budgetTrend && d.budgetTrend.length) ? d.budgetTrend[0].month : null;
   var budgetHtml = (trendStart ? '<div style="font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:12px">Общо от ' + escapeHtml(monthNameLong_(trendStart)) + ' до днес.</div>' : '')
     + '<div class="budget-grid">'
-    + '<div class="budget-card" title="' + escapeHtml(froFupTitle_(d.froCollected, d.maintenanceCollected)) + '"><div class="b-label">Приходи</div><div class="b-val inc">' + fmt(totals.income) + '</div></div>'
-    + '<div class="budget-card" title="' + escapeHtml(froFupTitle_(d.froExpense, d.maintenanceExpense)) + '"><div class="b-label">Разходи</div><div class="b-val exp">' + fmt(totals.expense) + '</div></div>'
+    + '<div class="budget-card"><div class="b-label">Приходи</div><div class="b-val inc">' + fmt(totals.income) + '</div>' + froSubHtml + '</div>'
+    + '<div class="budget-card"><div class="b-label">Разходи</div><div class="b-val exp">' + fmt(totals.expense) + '</div>' + froExpSubHtml + '</div>'
     + '<div class="budget-card"><div class="b-label">Каса</div><div class="b-val bal">' + fmt(totals.balance) + '</div>' + froBalSubHtml + '</div>'
     + '</div>';
   // Втори ред карти: Събираемост (под "Приходи"), Дължимо (под "Разходи"), Прогноза (под "Каса").
