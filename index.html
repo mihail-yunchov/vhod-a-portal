@@ -636,12 +636,19 @@ function downloadDebtorsExcel(){
 
 var IS_DEMO_MODE = SCRIPT_URL.indexOf('PASTE_YOUR') !== -1;
 
+// Всички заявки към бекенда — с POST (form-encoded тяло), за да НЕ пътува кодът за достъп в URL (22.11.2026).
+// Form-encoded тяло е "проста" заявка за CORS (без preflight); Apps Script го чете в e.parameter (doPost).
+// Бекендът вече не изпълнява действия през GET (doGet връща "презареди страницата").
+async function apiCall_(params){
+  var res = await fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams(params) });
+  return res.json();
+}
+
 async function loadStatus(code, silent){
   var errEl = document.getElementById('err');
   if (!silent) errEl.style.display = 'none';
   try {
-    var res = await fetch(SCRIPT_URL + '?action=getStatus&code=' + encodeURIComponent(code));
-    var data = await res.json();
+    var data = await apiCall_({ action: 'getStatus', code: code });
     if (!data.ok) {
       if (!silent) { errEl.textContent = data.error || 'Невалиден код.'; errEl.style.display = 'block'; }
       return false;
@@ -678,8 +685,7 @@ async function submitSignal(){
     return;
   }
   try {
-    var res = await fetch(SCRIPT_URL + '?action=submitSignal&code=' + encodeURIComponent(window.__activeCode) + '&text=' + encodeURIComponent(text) + '&category=' + encodeURIComponent(catEl.value));
-    var data = await res.json();
+    var data = await apiCall_({ action: 'submitSignal', code: window.__activeCode, text: text, category: catEl.value });
     if (data.ok) {
       msgEl.className = 'signal-msg ok'; msgEl.textContent = 'Сигналът е изпратен успешно.'; msgEl.style.display = 'block';
       textEl.value = '';
@@ -694,8 +700,7 @@ async function submitSignal(){
 
 async function resolveSignal(id){
   try {
-    var res = await fetch(SCRIPT_URL + '?action=resolveSignal&code=' + encodeURIComponent(window.__activeCode) + '&id=' + encodeURIComponent(id));
-    var data = await res.json();
+    var data = await apiCall_({ action: 'resolveSignal', code: window.__activeCode, id: id });
     if (data.ok) { await loadStatus(window.__activeCode, true); }
     else { alert(data.error || 'Грешка.'); }
   } catch (e) { alert('Грешка при връзка.'); }
@@ -717,8 +722,7 @@ function downloadCsv_(filename, rows){
 }
 async function exportCsv(){
   try {
-    var res = await fetch(SCRIPT_URL + '?action=exportData&code=' + encodeURIComponent(window.__activeCode));
-    var data = await res.json();
+    var data = await apiCall_({ action: 'exportData', code: window.__activeCode });
     if (!data.ok) { alert(data.error || 'Грешка при износ.'); return; }
     var payRows = [['Дата','Апартамент','Сума','Валута','Начин','Бележка']].concat(
       (data.payments||[]).map(function(p){ return [formatDateShort(p.date), p.unit, p.amount, p.currency, p.method, p.note]; })
@@ -887,7 +891,8 @@ function render(d){
   if (fc && fc.result) {
     var sgn = function(v){ return (v > 0.005 ? '+' : '') + fmt(v); };
     var fcTitle = 'Очаквани приходи: ' + fmt(fc.income.total) + ' (при ' + String(fc.collectionPct).replace('.', ',') + ' % събираемост)'
-      + '\nОчаквани разходи: ' + fmt(fc.expense.total) + ' (по последните 12 месеца + планирани ремонти)';
+      + '\nОчаквани разходи: ' + fmt(fc.expense.total) + ' (по последните 12 месеца + планирани ремонти)'
+      + (fc.planned ? '\nПланирани ремонти от лист ПРОГНОЗА: ' + (fc.planned.rows ? fmt(fc.planned.fro + fc.planned.fup) + ' (' + fc.planned.rows + ' бр.)' : 'няма въведени') : '');
     fcCardHtml = '<div class="budget-card budget-fc" title="' + escapeHtml(fcTitle) + '">'
       + '<div class="b-label">Прогноза ' + escapeHtml(fc.year) + '</div>'
       + '<div class="b-val ' + (fc.result.total >= 0 ? 'inc' : 'exp') + '">' + sgn(fc.result.total) + '</div>'
@@ -994,11 +999,20 @@ function render(d){
   }
 
   var s = d.stats || {};
+  // (22.11.2026) Брой обекти с напълно платено ТЕКУЩО тримесечие (stats.paidCurrentQuarter) — замества
+  // "платени такси този месец", който заради месечното нанасяне почти винаги показваше "2 от 54".
+  // Резервно paidThisMonth — само ако бекендът още е стар (index.html е качен преди новия Deploy).
+  var curQ = d.quarterPeriods && d.quarterPeriods.current;
+  var hasPq = s.paidCurrentQuarter != null;
+  var pqNum = hasPq ? s.paidCurrentQuarter : (s.paidThisMonth || 0);
+  var pqLabel = hasPq
+    ? 'платили изцяло тримесечието' + (curQ ? ' ' + quarterLabel_(curQ.startKey, curQ.endKey) : '')
+    : 'платени такси този месец';
   var statStripHtml = '<div class="stat-strip">'
-    + '<div class="stat-chip' + (s.paidThisMonth === 0 ? ' warn' : '') + '">'
-      + '<div class="stat-num">' + (s.paidThisMonth||0) + ' <span style="font-size:13px;color:var(--muted);font-weight:500">от ' + (s.totalUnits||0) + '</span></div>'
-      + '<div class="stat-label">платени такси този месец</div>'
-      + '<div class="stat-info">Без имена — само по номер на апартамент.</div>'
+    + '<div class="stat-chip' + (pqNum === 0 ? ' warn' : '') + '">'
+      + '<div class="stat-num">' + pqNum + ' <span style="font-size:13px;color:var(--muted);font-weight:500">от ' + (s.totalUnits||0) + '</span></div>'
+      + '<div class="stat-label">' + escapeHtml(pqLabel) + '</div>'
+      + '<div class="stat-info">Без имена — само брой апартаменти. Плащанията се нанасят веднъж месечно.</div>'
       + '</div>'
     + '<div class="stat-chip' + (s.overdueMonths > 0 ? ' warn' : '') + '">'
       + '<div class="stat-num">' + (s.overdueMonths||0) + ' <span style="font-size:13px;color:var(--muted);font-weight:500">от ' + (s.monthsSinceStart||0) + '</span></div>'
@@ -1030,7 +1044,8 @@ function render(d){
   var signalStatusLabelMap = { "Нов": "Нов", "В процес": "В работа", "Решен": "Решен" };
   var signalsListHtml = (d.signals || []).map(function(s){
     var cls = statusClassMap[s.status] || 'new';
-    var resolveBtn = (d.isAdmin && s.status !== 'Решен') ? '<button class="signal-resolve" onclick="resolveSignal(\'' + s.id + '\')">Маркирай решен</button>' : '';
+    // id-то се подава през data-атрибут (escape-нат), не директно в JS кода на onclick.
+    var resolveBtn = (d.isAdmin && s.status !== 'Решен') ? '<button class="signal-resolve" data-id="' + escapeHtml(s.id) + '" onclick="resolveSignal(this.getAttribute(\'data-id\'))">Маркирай решен</button>' : '';
     return '<div class="signal-row">'
       + '<span class="signal-status ' + cls + '">' + escapeHtml(signalStatusLabelMap[s.status] || s.status) + '</span>'
       + '<div style="flex:1;min-width:0"><div class="signal-text">' + escapeHtml(s.text) + '</div>'
