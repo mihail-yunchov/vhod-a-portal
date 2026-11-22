@@ -764,8 +764,8 @@ async function exportCsv(){
       (data.payments||[]).map(function(p){ return [formatDateShort(p.date), p.unit, p.amount, p.currency, p.method, p.note]; })
     );
     downloadCsv_('plashtania_' + todayStr_() + '.csv', payRows);
-    var budRows = [['Дата','Тип','Категория','Сума','Валута','Бележка']].concat(
-      (data.budget||[]).map(function(b){ return [formatDateShort(b.date), b.type, b.category, b.amount, b.currency, b.note]; })
+    var budRows = [['Дата','Тип','Категория','Сума','Валута','Бележка','Еднократен']].concat(
+      (data.budget||[]).map(function(b){ return [formatDateShort(b.date), b.type, b.category, b.amount, b.currency, b.note, b.oneOff || '']; })
     );
     downloadCsv_('byudzhet_' + todayStr_() + '.csv', budRows);
   } catch (e) { alert('Грешка при връзка.'); }
@@ -926,6 +926,7 @@ function render(d){
     var fcTitle = 'Очаквани приходи: ' + fmt(fc.income.total) + ' (при ' + String(fc.collectionPct).replace('.', ',') + ' % събираемост)'
       + '\nОчаквани разходи: ' + fmt(fc.expense.total) + ' (по последните 12 месеца + планирани ремонти)'
       + (fc.planned ? '\nПланирани ремонти от лист ПРОГНОЗА: ' + (fc.planned.rows ? fmt(fc.planned.fro + fc.planned.fup) + ' (' + fc.planned.rows + ' бр.)' : 'няма въведени') : '')
+      + (fc.oneOffExcluded > 0.005 ? '\nБез еднократните разходи (колона G в БЮДЖЕТ): ' + fmt(fc.oneOffExcluded) : '')
       + '\nОбщо (ФУП + ФРО): ' + sgn(fc.result.total);
     fcCardHtml = '<div class="budget-card budget-fc" title="' + escapeHtml(fcTitle) + '">'
       + '<div class="b-label">Прогноза ' + escapeHtml(fc.year) + '</div>'
@@ -952,6 +953,12 @@ function render(d){
       if (ba.budget) baParts.push('<b>' + ba.budget + '</b> в БЮДЖЕТ');
       admNotes.push('Редове с валута <b>BGN</b> и дата от 01.01.2026 нататък: ' + baParts.join(' и ')
         + '. Сумите им се делят на 1,95583. Ако плащането е в евро, смени валутата на <b>EUR</b>.');
+    }
+    // (22.11.2026) "Проблеми в данните" от бекенда (dataIssues): невалидни дати/суми/валути, непознати обекти,
+    // повтарящи се кодове, големи разходи в базата на прогнозата. Текстът идва от таблицата — escape-ва се.
+    if (d.dataIssues && d.dataIssues.length) {
+      admNotes.push('<b>Проблеми в данните (' + d.dataIssues.length + ')</b> — оправи ги в таблицата:'
+        + '<div style="margin-top:4px">' + d.dataIssues.map(function(t){ return '• ' + escapeHtml(t); }).join('<br>') + '</div>');
     }
     admNotes.forEach(function(t){
       budgetHtml += '<div class="admin-note">⚠️ ' + t + ' <span style="opacity:.75">(виждат само Касиер/Домоуправител)</span></div>';
