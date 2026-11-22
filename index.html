@@ -11,9 +11,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Вход А">
 <title>Вход А — Grand Azurro</title>
+<!-- (22.11.2026) По-бързо зареждане: ранна връзка към шрифтовете и към бекенда (Apps Script отговаря от
+     script.googleusercontent.com след пренасочване). Chart.js вече НЕ се зарежда тук — сваля се чак когато е нужна
+     графика (виж loadCharts_), така че собствениците, които виждат само картата, не я теглят изобщо. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://script.google.com" crossorigin>
+<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,600&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
   :root{
     --navy:#192166; --teal:#00C4D0; --teal-deep:#009EBD;
@@ -36,7 +41,6 @@
     background-image:radial-gradient(circle, rgba(25,33,102,0.05) 1px, transparent 1px); background-size:30px 30px;}
   .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:24px 18px 60px}
 
-  .demo-banner{background:var(--amber-tint);color:#8a5205;border:1px solid rgba(217,119,6,0.3);font-size:12px;text-align:center;padding:8px;border-radius:20px;margin-bottom:18px;font-weight:700;letter-spacing:.2px}
 
   .brand{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
   .brand h1{font-family:'Lora',serif;font-weight:800;font-size:24px;line-height:1.2;color:var(--navy);letter-spacing:-0.02em}
@@ -57,8 +61,6 @@
   .err{color:var(--red);font-size:13px;margin-top:12px;display:none}
   .hidden{display:none}
 
-  .demo-btn{width:100%;min-height:46px;margin-top:10px;background:var(--teal-tint);color:var(--teal-deep);border:1px solid rgba(0,196,208,.35);border-radius:9px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Nunito Sans',sans-serif}
-  .demo-btn.admin{background:var(--amber-tint);color:#8a5205;border-color:rgba(217,119,6,.35)}
   .divider{display:flex;align-items:center;gap:10px;margin:16px 0 4px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:700}
   .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
@@ -288,7 +290,7 @@
 
   @media print{
     body::before, body::after{display:none}
-    .demo-banner, .brand, .install-banner, .admin-toggle, .admin-close, .print-btn, .unit-card, .stat-strip, .runway-box, .export-btn, .section:not(#printSection), .logout, .foot, .portal-nav{display:none !important}
+    .brand, .install-banner, .admin-toggle, .admin-close, .print-btn, .unit-card, .stat-strip, .runway-box, .export-btn, .section:not(#printSection), .logout, .foot, .portal-nav{display:none !important}
     #printSection{display:block !important}
     .wrap{max-width:100%;padding:0}
     #adminView{border:none;box-shadow:none;padding:0}
@@ -349,7 +351,34 @@ function fmtOrDash(n, title){
   if (Math.abs(v) < 0.005) return '<span title="' + escapeHtml(title || 'Няма въведени данни') + '">—</span>';
   return fmt(v);
 }
-if (window.ChartDataLabels) { Chart.register(ChartDataLabels); }
+// ---- Външни библиотеки — зареждат се при нужда, с проверка на целостта (SRI) ----
+// SRI хешовете са официалните от cdnjs за точно тези версии: ако файлът на CDN бъде подменен, браузърът не го
+// изпълнява (страницата работи с кодове за достъп, затова чужд скрипт не бива да се изпълнява тихо).
+var LIBS = {
+  chart: { src: 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js', sri: 'sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==' },
+  datalabels: { src: 'https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js', sri: 'sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==' },
+  xlsx: { src: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', sri: 'sha512-r22gChDnGvBylk90+2e/ycr3RVrDi8DIOkIGNhJlKfuyQM4tIRAI062MaV8sfjQKYVGjOBaZBOA87z+IhZE9DA==' }
+};
+function loadScript_(lib){
+  return new Promise(function(resolve, reject){
+    var s = document.createElement('script');
+    s.src = lib.src; s.integrity = lib.sri; s.crossOrigin = 'anonymous';
+    s.onload = function(){ resolve(); };
+    s.onerror = function(){ s.remove(); reject(new Error('load ' + lib.src)); };
+    document.head.appendChild(s);
+  });
+}
+// Chart.js + datalabels — само за графиките (касиер и изгледа по тримесечия). Един път на сесия.
+var __chartsPromise = null;
+function loadCharts_(){
+  if (window.Chart && window.ChartDataLabels) return Promise.resolve(window.Chart);
+  if (!__chartsPromise) {
+    __chartsPromise = loadScript_(LIBS.chart).then(function(){ return loadScript_(LIBS.datalabels); })
+      .then(function(){ Chart.register(ChartDataLabels); return window.Chart; });
+    __chartsPromise.catch(function(){ __chartsPromise = null; }); // при грешка — нов опит следващия път
+  }
+  return __chartsPromise;
+}
 function monthLabel(key){
   var parts = key.split('-'); var names=['Яну','Фев','Мар','Апр','Май','Юни','Юли','Авг','Сеп','Окт','Ное','Дек'];
   return names[Number(parts[1])-1] + ' ' + parts[0];
@@ -529,7 +558,10 @@ function toggleAdmin(){
   if (tbtn) tbtn.setAttribute('aria-expanded', opening ? 'true' : 'false');
   if (opening) {
     document.getElementById('printDate').textContent = 'Актуално към ' + new Date().toLocaleDateString('bg-BG', {day:'2-digit', month:'long', year:'numeric'});
-    drawAdminChart(window.__lastData);
+    var box = document.getElementById('allDebtorsBox');
+    if (box && !window.Chart) box.innerHTML = '<div class="chart-note" style="padding:30px 0">Зареждане на графиката…</div>';
+    loadCharts_().then(function(){ drawAdminChart(window.__lastData); })
+      .catch(function(){ if (box) box.innerHTML = '<div class="chart-note" style="padding:30px 0">Графиката не можа да се зареди. Провери връзката и опитай пак.</div>'; });
     el.scrollIntoView({behavior:'smooth'});
   }
 }
@@ -625,14 +657,8 @@ function drawAdminChart(d){
 // ---- Сваляне на админ списъка като Excel (.xlsx): колона 1 = обект, колона 2 = дължима сума ----
 // Сумата е за ТЕКУЩОТО тримесечие: дължимо сега + остатък до края му. Бъдещото тримесечие не се експортва. SheetJS се зарежда чак при първо натискане (не забавя нормалното зареждане).
 function loadXlsx_(){
-  return new Promise(function(resolve, reject){
-    if (window.XLSX) return resolve(window.XLSX);
-    var s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-    s.onload = function(){ window.XLSX ? resolve(window.XLSX) : reject(new Error('xlsx')); };
-    s.onerror = function(){ reject(new Error('xlsx load')); };
-    document.head.appendChild(s);
-  });
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  return loadScript_(LIBS.xlsx).then(function(){ if (!window.XLSX) throw new Error('xlsx'); return window.XLSX; });
 }
 function downloadDebtorsExcel(){
   var d = window.__lastData || {};
@@ -668,7 +694,6 @@ function downloadDebtorsExcel(){
   }).then(done, done);
 }
 
-var IS_DEMO_MODE = SCRIPT_URL.indexOf('PASTE_YOUR') !== -1;
 
 // Всички заявки към бекенда — с POST (form-encoded тяло), за да НЕ пътува кодът за достъп в URL (22.11.2026).
 // Form-encoded тяло е "проста" заявка за CORS (без preflight); Apps Script го чете в e.parameter (doPost).
@@ -1258,6 +1283,18 @@ function drawCharts(d){
     debtorsCard.innerHTML = '<div class="chart-note">Няма апартаменти със задължения. 🎉</div>';
   }
 
+  // Графиките по месеци и касата са само в пълния изглед (касиер) — Chart.js се зарежда чак тогава (виж loadCharts_).
+  if (!document.getElementById('incomeExpenseChart') && !document.getElementById('cashChart')) return;
+  loadCharts_().then(function(){ drawFinanceCharts_(d); }).catch(function(){
+    ['incomeExpenseChart', 'cashChart'].forEach(function(id){
+      var c = document.getElementById(id);
+      if (c && c.parentNode) c.parentNode.innerHTML = '<div class="chart-note" style="padding:30px 0">Графиката не можа да се зареди.</div>';
+    });
+  });
+}
+
+function drawFinanceCharts_(d){
+  var red = '#e4003a', green = '#3d9e4a', muted = '#7a85a8', gridColor='rgba(25,33,102,0.08)';
   // Месеци в бъдещето (напр. запис с дата 2027 г.) не се показват в графиките "последните 6 месеца".
   var nowD = new Date(), nowKey = nowD.getFullYear() + '-' + String(nowD.getMonth() + 1).padStart(2, '0');
   var fullTrend = (d.budgetTrend || []).filter(function(x){ return x.month <= nowKey; });
@@ -1344,7 +1381,7 @@ function drawCharts(d){
 document.getElementById('code').addEventListener('keydown', function(e){ if (e.key === 'Enter') checkCode(); });
 
 // ---- PWA: service worker + install banner ----
-if ('serviceWorker' in navigator && !IS_DEMO_MODE) {
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', function(){
     navigator.serviceWorker.register('sw.js').catch(function(){});
   });
